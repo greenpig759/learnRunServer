@@ -6,7 +6,6 @@ import com.example.learnRunServer.portfolio.Repository.ProfileRepository;
 import com.example.learnRunServer.user.Entity.UserEntity;
 import com.example.learnRunServer.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -35,6 +34,7 @@ public class ProfileService {
         UserEntity userEntity = userRepository.findById(userId)
                         .orElseThrow(() -> new RuntimeException("User not found"));
 
+        profileEntity.setUser(userEntity); // 외래 키 엔티티에 추가
         profileRepository.save(profileEntity);
     }
 

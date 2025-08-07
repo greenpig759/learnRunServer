@@ -1,6 +1,7 @@
 package com.example.learnRunServer.portfolio.Entity;
 
 
+import com.example.learnRunServer.user.Entity.UserEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -17,11 +18,15 @@ import java.time.LocalDate;
 public class WorkExperienceEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long workEnperienceId;
+    private Long workExperienceId;
 
     @Column(nullable = false)
     private LocalDate startDate;
 
     @Column(nullable = true)
     private LocalDate endDate;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    private UserEntity user;
 }

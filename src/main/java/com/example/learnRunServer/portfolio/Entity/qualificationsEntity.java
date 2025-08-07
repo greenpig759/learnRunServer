@@ -1,5 +1,6 @@
 package com.example.learnRunServer.portfolio.Entity;
 
+import com.example.learnRunServer.user.Entity.UserEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -25,5 +26,8 @@ public class qualificationsEntity {
     @Column(nullable = false)
     private LocalDate getDate;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    private UserEntity user;
     // 왜 start랑 end로 했는지 확인해보기
 }

@@ -4,11 +4,13 @@ import com.example.learnRunServer.portfolio.DTO.ProfileDTO;
 import com.example.learnRunServer.portfolio.Service.ProfileService;
 import com.example.learnRunServer.token.CustomUserDetails;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+@Slf4j
 @Controller
 @RequestMapping("/learnRun")
 @RequiredArgsConstructor
@@ -18,8 +20,9 @@ public class ProfileController {
 
     // 프로필 추가 컨트롤러
     @PostMapping("/profile/save")
-    public ResponseEntity<Void> saveProfile(ProfileDTO profileDTO, @AuthenticationPrincipal CustomUserDetails customUserDetails) {
+    public ResponseEntity<Void> saveProfile(@RequestBody ProfileDTO profileDTO, @AuthenticationPrincipal CustomUserDetails customUserDetails) {
         profileService.saveProfile(profileDTO, customUserDetails.getUserId());
+        log.info("받은 프로필 정보: {}", profileDTO);
         return ResponseEntity.ok().build();
     }
 

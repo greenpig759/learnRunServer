@@ -21,18 +21,18 @@ public class RefreshTokenEntity {
     private Long refreshTokenId;
 
     @Column(nullable = false, unique = true)
-    private String token;
+    private String token; // 리프레시 토큰 문자열
 
     @Column(nullable = false)
-    private LocalDateTime issuedAt;
+    private LocalDateTime issuedAt; // 발급 시간
 
     @Column(nullable = false)
-    private LocalDateTime expiresAt;
+    private LocalDateTime expiresAt; // 만료 시간
 
     @Column(nullable = false) // 토큰이 유효한지 표시
     private boolean revoked;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "userId", nullable = false)
-    private UserEntity user;
+    private UserEntity user; // 토큰을 가진 유저
 }
