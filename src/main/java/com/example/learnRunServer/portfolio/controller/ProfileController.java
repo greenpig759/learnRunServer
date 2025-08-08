@@ -22,7 +22,7 @@ public class ProfileController {
     @PostMapping("/profile/save")
     public ResponseEntity<Void> saveProfile(@RequestBody ProfileDTO profileDTO, @AuthenticationPrincipal CustomUserDetails customUserDetails) {
         profileService.saveProfile(profileDTO, customUserDetails.getUserId());
-        log.info("받은 프로필 정보: {}", profileDTO);
+        log.info("받은 프로필 정보: {}", profileDTO); // 로그를 낋여봤습니다..
         return ResponseEntity.ok().build();
     }
 

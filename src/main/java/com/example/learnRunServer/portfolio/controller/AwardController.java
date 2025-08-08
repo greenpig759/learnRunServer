@@ -23,21 +23,21 @@ public class AwardController {
     @PostMapping("/award/save")
     public ResponseEntity<Void> saveAward(@RequestBody AwardDTO awardDTO, @AuthenticationPrincipal CustomUserDetails customUserDetails){
         awardService.saveAward(awardDTO, customUserDetails.getUserId());
-        log.info("받은 수상경력 정보: {}",awardDTO);
+        log.info("받은 수상경력 정보: {}",awardDTO); // 로그를 낋여봤습니다..
         return ResponseEntity.ok().build();
     }
 
     // 수상경력 수정 컨트롤러
-    @PutMapping("/award/update")
-    public ResponseEntity<Void> updateAward(@RequestBody AwardDTO awardDTO){
-        awardService.updateAward(awardDTO);
+    @PutMapping("/award/update/{awardId}")
+    public ResponseEntity<Void> updateAward(@PathVariable Long awardId, @RequestBody AwardDTO awardDTO){
+        awardService.updateAward(awardId, awardDTO);
         return ResponseEntity.ok().build();
     }
 
     // 수상경력 삭제 컨트롤러
-    @DeleteMapping("/award/delete")
-    public ResponseEntity<Void> deleteAward(@RequestBody AwardDTO awardDTO){
-        awardService.deleteAward(awardDTO);
+    @DeleteMapping("/award/delete/{awardId}")
+    public ResponseEntity<Void> deleteAward(@PathVariable Long awardId){
+        awardService.deleteAward(awardId);
         return ResponseEntity.ok().build();
     }
 

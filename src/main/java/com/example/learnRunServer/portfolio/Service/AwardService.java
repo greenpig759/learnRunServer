@@ -39,8 +39,8 @@ public class AwardService {
     }
 
     // 수상경력 수정
-    public void updateAward(AwardDTO awardDTO){
-        AwardEntity awardEntity = awardRepository.findByAwardId(awardDTO.getAwardId())
+    public void updateAward(Long awardId, AwardDTO awardDTO){
+        AwardEntity awardEntity = awardRepository.findByAwardId(awardId)
                 .orElseThrow(()-> new IllegalArgumentException("해당 수상경력이 존재하지 않습니다"));
 
         awardEntity.setDate(awardDTO.getDate());
@@ -49,13 +49,13 @@ public class AwardService {
     }
 
     // 수상경력 삭제
-    public void deleteAward(AwardDTO awardDTO){
-        AwardEntity awardEntity = awardRepository.findByAwardId(awardDTO.getAwardId())
+    public void deleteAward(Long awardId){
+        AwardEntity awardEntity = awardRepository.findByAwardId(awardId)
                 .orElseThrow(()-> new IllegalArgumentException("해당 수상경력이 존재하지 않습니다"));
         awardRepository.delete(awardEntity);
     }
 
-    // 모든 수상경력 불러오기
+    // 수상경력 리스트 불러오기
     public List<AwardDTO> getAwards(Long userId){
         UserEntity userEntity = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found"));
@@ -63,12 +63,13 @@ public class AwardService {
         // 1:N 관계 -> List로 가져옴.
         List<AwardEntity> awardEntities = awardRepository.findByUser(userEntity);
 
-        return awardEntities.stream()
-                .map(awardEntity -> AwardDTO.builder()
+        // awardEntity 리스트 dto로 변환해서 리턴
+        return awardEntities.stream() // List를 stream으로 변환
+                .map(awardEntity -> AwardDTO.builder() // .map(): Entity 요소를 dto로 변환
                         .awardId(awardEntity.getAwardId())
                         .date(awardEntity.getDate())
                         .title(awardEntity.getTitle())
                         .build())
-                .collect(Collectors.toList());
+                .collect(Collectors.toList()); // 다시 리스트 형태로 수집
     }
 }

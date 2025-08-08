@@ -26,6 +26,9 @@ public class WorkExperienceEntity {
     @Column(nullable = true)
     private LocalDate endDate;
 
+    @Column(nullable = false)
+    private String title;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private UserEntity user;

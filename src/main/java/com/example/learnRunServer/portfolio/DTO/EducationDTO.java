@@ -4,14 +4,15 @@ import lombok.*;
 
 import java.time.LocalDate;
 
-@Setter
 @Getter
+@Setter
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class AwardDTO {
-    private Long awardId;
+public class EducationDTO {
+    private Long educationId;
     private String title;
-    private LocalDate date;
+    private LocalDate startDate;
+    private LocalDate endDate;
 }

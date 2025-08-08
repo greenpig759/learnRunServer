@@ -5,6 +5,8 @@ import com.example.learnRunServer.user.Entity.UserEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDate;
+
 @Getter
 @Setter
 @ToString
@@ -22,7 +24,7 @@ public class AwardEntity {
     private String title;
 
     @Column(nullable = false)
-    private String date;
+    private LocalDate date;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)

@@ -14,7 +14,7 @@ import java.time.LocalDate;
 @Builder
 @Entity
 @Table(name = "qualifications_table")
-public class qualificationsEntity {
+public class QualificationsEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(nullable = false)
@@ -23,8 +23,9 @@ public class qualificationsEntity {
     @Column(nullable = false)
     private String title;
 
+    // 수상경력은 String으로 하고 자격증은 LocalDate로 한 이유?
     @Column(nullable = false)
-    private LocalDate getDate;
+    private LocalDate qualificationsDate;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)

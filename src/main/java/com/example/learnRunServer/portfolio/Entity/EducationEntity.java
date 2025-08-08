@@ -4,6 +4,8 @@ import com.example.learnRunServer.user.Entity.UserEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDate;
+
 @Getter
 @Setter
 @ToString
@@ -17,11 +19,12 @@ public class EducationEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long educationId;
 
+    // 수상경력은 String으로 하고 자격증은 LocalDate로 한 이유?
     @Column(nullable = false)
-    private String startDate;
+    private LocalDate startDate;
 
     @Column(nullable = false)
-    private String endDate;
+    private LocalDate endDate;
 
     @Column(nullable = false)
     private String title;

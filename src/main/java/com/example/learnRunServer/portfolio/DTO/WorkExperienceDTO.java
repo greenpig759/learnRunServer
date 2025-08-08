@@ -6,12 +6,13 @@ import java.time.LocalDate;
 
 @Setter
 @Getter
-@ToString
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
+@ToString
 @Builder
-public class AwardDTO {
-    private Long awardId;
+public class WorkExperienceDTO {
+    private Long workExperienceId;
     private String title;
-    private LocalDate date;
+    private LocalDate startDate;
+    private LocalDate endDate;
 }
