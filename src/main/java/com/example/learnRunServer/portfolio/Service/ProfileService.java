@@ -1,5 +1,6 @@
 package com.example.learnRunServer.portfolio.Service;
 
+import com.example.learnRunServer.exception.ResourceNotFoundException;
 import com.example.learnRunServer.portfolio.DTO.ProfileDTO;
 import com.example.learnRunServer.portfolio.Entity.ProfileEntity;
 import com.example.learnRunServer.portfolio.Repository.ProfileRepository;
@@ -7,8 +8,6 @@ import com.example.learnRunServer.user.Entity.UserEntity;
 import com.example.learnRunServer.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -18,30 +17,29 @@ public class ProfileService {
 
     // DTO -> Entity 변환
     public ProfileEntity toEntity(ProfileDTO dto) {
-        ProfileEntity profileEntity = ProfileEntity.builder()
+        return ProfileEntity.builder()
                 .name(dto.getName())
                 .email(dto.getEmail())
                 .build();
-        return profileEntity;
     }
-
 
     // 프로필 추가
     public void saveProfile(ProfileDTO profileDTO, Long userId) {
-        ProfileEntity profileEntity = toEntity(profileDTO);
-
-        // 유저 엔티티 조회후 프로필 엔티티에 포함시키기
         UserEntity userEntity = userRepository.findById(userId)
-                        .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("ID가 " + userId + "인 사용자를 찾을 수 없습니다."));
 
-        profileEntity.setUser(userEntity); // 외래 키 엔티티에 추가
+        ProfileEntity profileEntity = toEntity(profileDTO);
+        profileEntity.setUser(userEntity);
         profileRepository.save(profileEntity);
     }
 
     // 프로필 수정
-    public void updateProfile(ProfileDTO profileDTO) {
-        ProfileEntity profileEntity = profileRepository.findByProfileId(profileDTO.getProfileId())
-                .orElseThrow(()-> new IllegalArgumentException("해당 프로필이 존재하지 않습니다"));
+    public void updateProfile(ProfileDTO profileDTO, Long userId) {
+        UserEntity userEntity = userRepository.findById(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("ID가 " + userId + "인 사용자를 찾을 수 없습니다."));
+
+        ProfileEntity profileEntity = profileRepository.findByUserUserId(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("ID가 " + userId + "인 수정할 프로필을 찾을 수 없습니다."));
 
         profileEntity.setName(profileDTO.getName());
         profileEntity.setEmail(profileDTO.getEmail());
@@ -49,27 +47,29 @@ public class ProfileService {
     }
 
     // 프로필 삭제
-    public void deleteProfile(ProfileDTO profileDTO) {
-        ProfileEntity profileEntity = profileRepository.findByProfileId(profileDTO.getProfileId())
-                .orElseThrow(()-> new IllegalArgumentException("해당 프로필이 존재하지 않습니다"));
+    public void deleteProfile(Long userId) {
+        UserEntity userEntity = userRepository.findById(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("ID가 " + userId + "인 사용자를 찾을 수 없습니다."));
+
+        ProfileEntity profileEntity = profileRepository.findByUserUserId(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("ID가 " + userId + "인 삭제할 프로필을 찾을 수 없습니다."));
+
         profileRepository.delete(profileEntity);
     }
 
     // 프로필 불러오기
     public ProfileDTO getProfile(Long userId) {
         UserEntity userEntity = userRepository.findById(userId)
-                .orElseThrow(()-> new RuntimeException("User not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("ID가 " + userId + "인 사용자를 찾을 수 없습니다."));
 
-        // 일대일 관계이므로 하나만 가져옴
-        ProfileEntity profileEntity = profileRepository.findByUser(userEntity)
-                .orElseThrow(()-> new RuntimeException("Profile not found"));
+        ProfileEntity profileEntity = profileRepository.findByUserUserId(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("ID가 " + userId + "인 프로필을 찾을 수 없습니다."));
 
         // DTO로 변환하여 반환
-        ProfileDTO profileDTO = ProfileDTO.builder()
+        return ProfileDTO.builder()
                 .profileId(profileEntity.getProfileId())
                 .name(profileEntity.getName())
                 .email(profileEntity.getEmail())
                 .build();
-        return profileDTO;
     }
 }

@@ -10,5 +10,5 @@ import java.util.Optional;
 
 public interface WorkExperienceRepository extends JpaRepository<WorkExperienceEntity, Long> {
     Optional<WorkExperienceEntity> findByWorkExperienceId(Long workExperienceId);
-    List<WorkExperienceEntity> findByUser(UserEntity user);
+    List<WorkExperienceEntity> findByUserUserId(Long userId);
 }

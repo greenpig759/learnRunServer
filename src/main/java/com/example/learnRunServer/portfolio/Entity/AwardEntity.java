@@ -17,7 +17,7 @@ import java.time.LocalDate;
 @Table(name = "award_table")
 public class AwardEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY) // pk
     private Long awardId;
 
     @Column(nullable = false)

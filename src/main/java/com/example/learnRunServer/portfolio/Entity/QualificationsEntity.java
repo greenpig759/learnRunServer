@@ -23,12 +23,10 @@ public class QualificationsEntity {
     @Column(nullable = false)
     private String title;
 
-    // 수상경력은 String으로 하고 자격증은 LocalDate로 한 이유?
     @Column(nullable = false)
-    private LocalDate qualificationsDate;
+    private LocalDate date;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private UserEntity user;
-    // 왜 start랑 end로 했는지 확인해보기
 }
