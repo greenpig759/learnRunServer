@@ -3,6 +3,7 @@ package com.example.learnRunServer.portfolio.controller;
 import com.example.learnRunServer.portfolio.DTO.AwardDTO;
 import com.example.learnRunServer.portfolio.Service.AwardService;
 import com.example.learnRunServer.token.CustomUserDetails;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -21,7 +22,7 @@ public class AwardController {
 
     // 수상경력 추가 컨트롤러
     @PostMapping("/award/save")
-    public ResponseEntity<Void> saveAward(@RequestBody AwardDTO awardDTO, @AuthenticationPrincipal CustomUserDetails customUserDetails){
+    public ResponseEntity<Void> saveAward(@Valid @RequestBody AwardDTO awardDTO, @AuthenticationPrincipal CustomUserDetails customUserDetails){
         awardService.saveAward(awardDTO, customUserDetails.getUserId());
         log.info("받은 수상경력 정보: {}",awardDTO); // 로그를 낋여봤습니다..
         return ResponseEntity.ok().build();
@@ -29,7 +30,7 @@ public class AwardController {
 
     // 수상경력 수정 컨트롤러
     @PutMapping("/award/update/{awardId}")
-    public ResponseEntity<Void> updateAward(@PathVariable Long awardId, @RequestBody AwardDTO awardDTO){
+    public ResponseEntity<Void> updateAward(@PathVariable Long awardId, @Valid @RequestBody AwardDTO awardDTO){
         awardService.updateAward(awardId, awardDTO);
         return ResponseEntity.ok().build();
     }

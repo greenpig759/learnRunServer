@@ -3,8 +3,6 @@ package com.example.learnRunServer.user.Entity;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.time.LocalDate;
-
 @Setter
 @Getter
 @ToString

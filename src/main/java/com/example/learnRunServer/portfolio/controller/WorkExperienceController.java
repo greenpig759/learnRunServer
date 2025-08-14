@@ -3,6 +3,7 @@ package com.example.learnRunServer.portfolio.controller;
 import com.example.learnRunServer.portfolio.DTO.WorkExperienceDTO;
 import com.example.learnRunServer.portfolio.Service.WorkExperienceService;
 import com.example.learnRunServer.token.CustomUserDetails;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -21,7 +22,7 @@ public class WorkExperienceController {
 
     // 경력 추가 컨트롤러
     @PostMapping("/workExperience/save")
-    public ResponseEntity<Void> saveWorkExperience(@RequestBody WorkExperienceDTO workExperienceDTO, @AuthenticationPrincipal CustomUserDetails customUserDetails){
+    public ResponseEntity<Void> saveWorkExperience(@Valid @RequestBody WorkExperienceDTO workExperienceDTO, @AuthenticationPrincipal CustomUserDetails customUserDetails){
         workExperienceService.saveWorkExperience(workExperienceDTO, customUserDetails.getUserId());
         log.info("경력 저장 정보: {}",workExperienceDTO);
         return ResponseEntity.ok().build();
@@ -29,7 +30,7 @@ public class WorkExperienceController {
 
     // 경력 수정 컨트롤러
     @PutMapping("/workExperience/update/{workExperienceId}")
-    public ResponseEntity<Void> updateWorkExperience(@PathVariable Long workExperienceId, @RequestBody WorkExperienceDTO workExperienceDTO){
+    public ResponseEntity<Void> updateWorkExperience(@PathVariable Long workExperienceId, @Valid @RequestBody WorkExperienceDTO workExperienceDTO){
         workExperienceService.updateWorkExperience(workExperienceId, workExperienceDTO);
         return ResponseEntity.ok().build();
     }

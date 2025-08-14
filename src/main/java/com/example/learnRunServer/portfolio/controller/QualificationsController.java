@@ -3,6 +3,7 @@ package com.example.learnRunServer.portfolio.controller;
 import com.example.learnRunServer.portfolio.DTO.QualificationsDTO;
 import com.example.learnRunServer.portfolio.Service.QualificationsService;
 import com.example.learnRunServer.token.CustomUserDetails;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -21,7 +22,7 @@ public class QualificationsController {
 
     // 자격증 추가 컨트롤러
     @PostMapping("/qualifications/save")
-    public ResponseEntity<Void> saveQualifications(@RequestBody QualificationsDTO qualificationsDTO, @AuthenticationPrincipal CustomUserDetails customUserDetails){
+    public ResponseEntity<Void> saveQualifications(@Valid @RequestBody QualificationsDTO qualificationsDTO, @AuthenticationPrincipal CustomUserDetails customUserDetails){
         qualificationsService.saveQualifications(qualificationsDTO, customUserDetails.getUserId());
         log.info("학력 정보: {}",qualificationsDTO); // 로그를 낋여봤습니다..
         return ResponseEntity.ok().build();
@@ -29,7 +30,7 @@ public class QualificationsController {
 
     // 자격증 수정 컨트롤러
     @PutMapping("/qualifications/update/{qualificationsId}")
-    public ResponseEntity<Void> updateQualifications(@PathVariable Long qualificationsId, @RequestBody QualificationsDTO qualificationsDTO){
+    public ResponseEntity<Void> updateQualifications(@PathVariable Long qualificationsId, @Valid @RequestBody QualificationsDTO qualificationsDTO){
         qualificationsService.updateQualifications(qualificationsId, qualificationsDTO);
 
         return ResponseEntity.ok().build();

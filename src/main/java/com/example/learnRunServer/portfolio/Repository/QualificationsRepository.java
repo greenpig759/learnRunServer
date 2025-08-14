@@ -9,5 +9,5 @@ import java.util.Optional;
 
 public interface QualificationsRepository extends JpaRepository<QualificationsEntity, Long> {
     Optional<QualificationsEntity> findByQualificationsId(Long qualificationsId);
-    List<QualificationsEntity> findByUser(UserEntity user);
+    List<QualificationsEntity> findByUserUserId(Long userId);
 }
