@@ -61,6 +61,7 @@ public class JwtProvider {
                     .parseSignedClaims(token); // JWT 토큰을 서명까지 검증하며 파싱
             return true; // 예외 없다면 유효한 토근
         }catch(JwtException | IllegalArgumentException e){
+            log.warn("토큰 유효성 검사 실패: {}", e.getMessage());
             return false; // 예외 발생 시 false 반환
         }
     }

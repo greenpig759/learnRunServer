@@ -17,5 +17,10 @@ public class SkilEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long skilId;
 
-    // 성빈이랑 합의 보기
+    @Column(nullable = false)
+    private String skilTitle;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "skil_detail_id")
+    private SkilDetailEntity skilDetail;
 }
