@@ -1,6 +1,7 @@
 package com.example.learnRunServer.portfolio.Entity;
 
 
+import com.example.learnRunServer.user.Entity.UserEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -18,9 +19,12 @@ public class SkilEntity {
     private Long skilId;
 
     @Column(nullable = false)
-    private String skilTitle;
+    private String title;
+
+    @Column(nullable = false)
+    private String text;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "skil_detail_id")
-    private SkilDetailEntity skilDetail;
+    @JoinColumn(name = "user_id", nullable = false)
+    private UserEntity user;
 }
