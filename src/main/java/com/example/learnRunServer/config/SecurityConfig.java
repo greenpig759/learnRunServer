@@ -20,7 +20,12 @@ public class SecurityConfig {
                 .authorizeHttpRequests(
                         authorize -> authorize
                                 .requestMatchers("/learnRun/user/login", "/learnRun/memo/save",
-                                "/learnRun/memo/update", "/learnRun/memo/delete", "/learnRun/memo/all").permitAll() // 이것들 허용 해놓음
+                                "/learnRun/memo/update", "/learnRun/memo/delete", "/learnRun/memo/all",
+                                        "/swagger-ui/**",
+                                        "/v3/api-docs/**",
+                                        "/swagger-ui.html",
+                                        "/swagger-resources/**",
+                                        "/webjars/**").permitAll() // 이것들 허용 해놓음
                                 .anyRequest().authenticated()
                         //authenticated()로 하면 설정한 것 이외의 요청은 인증 필요, permitAll로 하면 필요 없음
 

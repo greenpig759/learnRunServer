@@ -63,7 +63,7 @@ public class ProjectService {
     // 프로젝트 글 리스트 불러오기 메서드
     public List<ProjectDTO> getAllProjects(Long userId){
         // 1. 해당 유저의 모든 글정보(제목, 시작날짜, 끝날짜)
-        List<ProjectEntity> projectEntityList = projectRepository.findAllByUserId(userId);
+        List<ProjectEntity> projectEntityList = projectRepository.findAllByUser_UserId(userId);
 
         // 3. 해당 Entity에서 제목, 시작날짜, 끝날짜만 DTO로 변환 후 봔환한다
         List<ProjectDTO> projectDTOList = new ArrayList<>();
