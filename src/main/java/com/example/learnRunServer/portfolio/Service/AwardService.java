@@ -1,6 +1,7 @@
 package com.example.learnRunServer.portfolio.Service;
 
-import com.example.learnRunServer.exception.ResourceNotFoundException;
+import com.example.learnRunServer.exception.AwardNotFoundException;
+import com.example.learnRunServer.exception.UserNotFoundException;
 import com.example.learnRunServer.portfolio.DTO.AwardDTO;
 import com.example.learnRunServer.portfolio.Entity.AwardEntity;
 import com.example.learnRunServer.portfolio.Repository.AwardRepository;
@@ -27,7 +28,7 @@ public class AwardService {
 
     public void saveAward(AwardDTO awardDTO, Long userId){
         UserEntity userEntity = userRepository.findById(userId)
-                .orElseThrow(() -> new ResourceNotFoundException("ID가 " + userId + "인 사용자를 찾을 수 없습니다."));
+                .orElseThrow(() -> new UserNotFoundException("ID가 " + userId + "인 사용자를 찾을 수 없습니다."));
 
         AwardEntity awardEntity = toEntity(awardDTO);
         awardEntity.setUser(userEntity);
@@ -38,7 +39,7 @@ public class AwardService {
         // 1. DB에서 ID로 수상 경력 조회
         AwardEntity awardEntity = awardRepository.findByAwardId(awardId)
                 // 2. 조회 결과가 없으면 ResourceNotFoundException 발생
-                .orElseThrow(()-> new ResourceNotFoundException("ID가 " + awardId + "인 수정할 수상경력을 찾을 수 없습니다."));
+                .orElseThrow(()-> new AwardNotFoundException("ID가 " + awardId + "인 수정할 수상경력을 찾을 수 없습니다."));
 
         awardEntity.setDate(awardDTO.getDate());
         awardEntity.setTitle(awardDTO.getTitle());
@@ -47,13 +48,13 @@ public class AwardService {
 
     public void deleteAward(Long awardId){
         AwardEntity awardEntity = awardRepository.findByAwardId(awardId)
-                .orElseThrow(()-> new ResourceNotFoundException("ID가 " + awardId + "인 삭제할 수상경력을 찾을 수 없습니다."));
+                .orElseThrow(()-> new AwardNotFoundException("ID가 " + awardId + "인 삭제할 수상경력을 찾을 수 없습니다."));
         awardRepository.delete(awardEntity);
     }
 
     public List<AwardDTO> getAwards(Long userId){
         UserEntity userEntity = userRepository.findById(userId)
-                .orElseThrow(() -> new ResourceNotFoundException("ID가 " + userId + "인 사용자를 찾을 수 없습니다."));
+                .orElseThrow(() -> new AwardNotFoundException("ID가 " + userId + "인 사용자를 찾을 수 없습니다."));
 
         List<AwardEntity> awardEntities = awardRepository.findByUserUserId(userId);
 

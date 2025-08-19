@@ -1,6 +1,6 @@
 package com.example.learnRunServer.portfolio.Service;
 
-import com.example.learnRunServer.exception.ResourceNotFoundException;
+import com.example.learnRunServer.exception.QualificationNotFoundException;
 import com.example.learnRunServer.portfolio.DTO.QualificationsDTO;
 import com.example.learnRunServer.portfolio.Entity.QualificationsEntity;
 import com.example.learnRunServer.portfolio.Repository.QualificationsRepository;
@@ -27,7 +27,7 @@ public class QualificationsService {
 
     public void saveQualifications(QualificationsDTO qualificationsDTO, Long userId){
         UserEntity userEntity = userRepository.findById(userId)
-                .orElseThrow(() -> new ResourceNotFoundException("ID가 " + userId + "인 사용자를 찾을 수 없습니다."));
+                .orElseThrow(() -> new QualificationNotFoundException("ID가 " + userId + "인 사용자를 찾을 수 없습니다."));
 
         QualificationsEntity qualificationsEntity = toEntity(qualificationsDTO);
         qualificationsEntity.setUser(userEntity);
@@ -36,7 +36,7 @@ public class QualificationsService {
 
     public void updateQualifications(Long qualificationsId, QualificationsDTO qualificationsDTO){
         QualificationsEntity qualificationsEntity = qualificationsRepository.findByQualificationsId(qualificationsId)
-                .orElseThrow(() -> new ResourceNotFoundException("ID가 " + qualificationsId + "인 수정할 자격증을 찾을 수 없습니다."));
+                .orElseThrow(() -> new QualificationNotFoundException("ID가 " + qualificationsId + "인 수정할 자격증을 찾을 수 없습니다."));
 
         qualificationsEntity.setTitle(qualificationsDTO.getTitle());
         qualificationsEntity.setDate(qualificationsDTO.getDate());
@@ -45,14 +45,14 @@ public class QualificationsService {
 
     public void deleteQualifications(Long qualificationsId){
         QualificationsEntity qualificationsEntity = qualificationsRepository.findByQualificationsId(qualificationsId)
-                .orElseThrow(() -> new ResourceNotFoundException("ID가 " + qualificationsId + "인 삭제할 자격증을 찾을 수 없습니다."));
+                .orElseThrow(() -> new QualificationNotFoundException("ID가 " + qualificationsId + "인 삭제할 자격증을 찾을 수 없습니다."));
 
         qualificationsRepository.delete(qualificationsEntity);
     }
 
     public List<QualificationsDTO> getQualifications(Long userId){
         UserEntity userEntity = userRepository.findById(userId)
-                .orElseThrow(() -> new ResourceNotFoundException("ID가 " + userId + "인 사용자를 찾을 수 없습니다."));
+                .orElseThrow(() -> new QualificationNotFoundException("ID가 " + userId + "인 사용자를 찾을 수 없습니다."));
 
         List<QualificationsEntity> qualificationsEntities = qualificationsRepository.findByUserUserId(userId);
 
