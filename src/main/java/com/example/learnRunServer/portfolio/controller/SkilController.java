@@ -67,7 +67,7 @@ public class SkilController {
     }
 
     // 스킬 전부 가져오기 메서드
-    @GetMapping("/skil/all")
+    @GetMapping("/skil")
     @Operation(summary = "스킬 전체 조회", description = "사용자의 모든 스킬 목록을 조회한다")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "조회 성공")

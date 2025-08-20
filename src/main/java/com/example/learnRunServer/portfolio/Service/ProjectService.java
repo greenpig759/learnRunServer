@@ -1,13 +1,15 @@
 package com.example.learnRunServer.portfolio.Service;
 
+import com.example.learnRunServer.exception.ProjectNotFoundException;
+import com.example.learnRunServer.exception.UserNotFoundException;
 import com.example.learnRunServer.portfolio.DTO.ProjectDTO;
 import com.example.learnRunServer.portfolio.Entity.ProjectEntity;
 import com.example.learnRunServer.portfolio.Repository.ProjectRepository;
 import com.example.learnRunServer.user.Entity.UserEntity;
 import com.example.learnRunServer.user.repository.UserRepository;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,32 +22,34 @@ public class ProjectService {
 
     // DTO -> Entity 변환 메서드
     public ProjectEntity toEntity(ProjectDTO projectDTO){
-        ProjectEntity projectEntity = ProjectEntity.builder()
+        return ProjectEntity.builder()
                 .startDate(projectDTO.getStartDate())
                 .endDate(projectDTO.getEndDate())
                 .title(projectDTO.getTitle())
                 .text(projectDTO.getText())
                 .build();
-
-        return projectEntity;
     }
 
     // 프로젝트 글 추가 메서드
-    public void saveProject(ProjectDTO projectDTO, Long userId){
-        // 1. DTO를 Entity로 변환
+    @Transactional
+    public Long saveProject(ProjectDTO projectDTO, Long userId){
         ProjectEntity projectEntity = toEntity(projectDTO);
-        // 2. 유저의 정보를 추가해주기
-        UserEntity userEntity = userRepository.findById(userId).orElseThrow();
+
+        // 유저 정보 추가
+        UserEntity userEntity = userRepository.findById(userId)
+                .orElseThrow(() -> new UserNotFoundException("User not found: " + userId));
         projectEntity.setUser(userEntity);
         projectRepository.save(projectEntity);
+
+        return projectEntity.getProjectId();
     }
 
     // 프로젝트 글 수정 메서드
     @Transactional
-    public void updateProject(ProjectDTO projectDTO){
+    public void updateProject(ProjectDTO projectDTO, Long projectId){
         // 1. 기존에 있던 Entity 불러오기
-        ProjectEntity projectEntity = projectRepository.findByProjectId(projectDTO.getProjectId())
-                .orElseThrow(()-> new IllegalArgumentException("해당 글 없음"));
+        ProjectEntity projectEntity = projectRepository.findByProjectId(projectId)
+                .orElseThrow(() -> new ProjectNotFoundException("Project not found: " + projectId));
 
         // 2. 기존의 내용에 새로운 내용 붙여넣고 다시 저장하기
         projectEntity.setStartDate(projectDTO.getStartDate());
@@ -55,12 +59,20 @@ public class ProjectService {
     }
 
     // 프로젝트 글 삭제 메서드
-    public void deleteProject(Long projectId){
-        projectRepository.findByProjectId(projectId);
-        projectRepository.deleteById(projectId);
+    @Transactional
+    public void deleteProject(Long projectId, Long userID){
+        ProjectEntity projectEntity = projectRepository.findByProjectId(projectId)
+                        .orElseThrow(() -> new ProjectNotFoundException("Project not found: " + projectId));
+
+        if(!projectEntity.getUser().getUserId().equals(userID)){
+            throw new SecurityException("You are not allowed to delete this project");
+        }
+
+        projectRepository.delete(projectEntity);
     }
 
     // 프로젝트 글 리스트 불러오기 메서드
+    @Transactional(readOnly = true)
     public List<ProjectDTO> getAllProjects(Long userId){
         // 1. 해당 유저의 모든 글정보(제목, 시작날짜, 끝날짜)
         List<ProjectEntity> projectEntityList = projectRepository.findAllByUser_UserId(userId);
@@ -83,7 +95,7 @@ public class ProjectService {
     public ProjectDTO getProjectDetail(Long projectId){
         // 1. 해당 프로젝트의 Entity 가져오기
         ProjectEntity projectEntity = projectRepository.findByProjectId(projectId)
-                .orElse(null);
+                .orElseThrow(() -> new ProjectNotFoundException("Project not found: " + projectId));
         // 2. DTO로 변환하여 리턴하기
         ProjectDTO projectDTO = ProjectDTO.builder()
                 .projectId(projectEntity.getProjectId())
