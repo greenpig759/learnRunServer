@@ -12,7 +12,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -20,7 +19,7 @@ import java.net.URI;
 import java.util.List;
 
 @Slf4j
-@Controller
+@RestController
 @RequestMapping("/learnRun")
 @RequiredArgsConstructor
 @Tag(name = "Education API", description = "학력 관련 API 모음")
@@ -67,7 +66,7 @@ public class EducationController {
         return ResponseEntity.ok().build();
     }
 
-    @Operation(summary = "학력 조회", description = "사용자의 모든 학력 조회")
+    @Operation(summary = "학력 전체 조회", description = "사용자의 모든 학력 조회")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "학력 조회 성공")
     })

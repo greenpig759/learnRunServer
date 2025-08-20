@@ -30,7 +30,7 @@ public class ProfileService {
     public Long saveProfile(ProfileDTO profileDTO, Long userId) {
         log.debug("Attempting to save profile for userId={}", userId);
         UserEntity userEntity = userRepository.findById(userId)
-                .orElseThrow(() -> new UserNotFoundException("ID가 " + userId + "인 사용자를 찾을 수 없습니다."));
+                .orElseThrow(() -> new UserNotFoundException("User not found with id: " + userId));
 
         ProfileEntity profileEntity = toEntity(profileDTO);
         profileEntity.setUser(userEntity);
@@ -46,7 +46,7 @@ public class ProfileService {
         }
 
         ProfileEntity profileEntity = profileRepository.findByUser_UserId(userId)
-                .orElseThrow(() -> new ProfileNotFoundException("ID가 " + userId + "인 수정할 프로필을 찾을 수 없습니다."));
+                .orElseThrow(() -> new ProfileNotFoundException("User not found with id: " + userId));
 
         profileEntity.setName(profileDTO.getName());
         profileEntity.setEmail(profileDTO.getEmail());
@@ -60,7 +60,7 @@ public class ProfileService {
         }
 
         ProfileEntity profileEntity = profileRepository.findByUser_UserId(userId)
-                .orElseThrow(() -> new ProfileNotFoundException("ID가 " + userId + "인 삭제할 프로필을 찾을 수 없습니다."));
+                .orElseThrow(() -> new ProfileNotFoundException("User not found with id: " + userId));
 
         profileRepository.delete(profileEntity);
         log.info("Profile deleted for userId={}", userId);
@@ -70,11 +70,11 @@ public class ProfileService {
     public ProfileDTO getProfile(Long userId) {
         log.debug("Attempting to get profile for userId={}", userId);
         if (!userRepository.existsById(userId)) {
-            throw new UserNotFoundException("ID가 " + userId + "인 사용자를 찾을 수 없습니다.");
+            throw new UserNotFoundException("User not found with id: " + userId);
         }
 
         ProfileEntity profileEntity = profileRepository.findByUser_UserId(userId)
-                .orElseThrow(() -> new ProfileNotFoundException("ID가 " + userId + "인 프로필을 찾을 수 없습니다."));
+                .orElseThrow(() -> new ProfileNotFoundException("User not found with id: " + userId));
 
         return ProfileDTO.builder()
                 .profileId(profileEntity.getProfileId())

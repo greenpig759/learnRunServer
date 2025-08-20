@@ -12,14 +12,13 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
 
 @Slf4j
-@Controller
+@RestController
 @RequestMapping("/learnRun")
 @RequiredArgsConstructor
 @Tag(name = "Profile API", description = "프로필 관련 API 모음")
@@ -66,7 +65,7 @@ public class ProfileController {
         return ResponseEntity.ok().build();
     }
 
-    @Operation(summary = "프로필 조회", description = "사용자의 프로필 조회")
+    @Operation(summary = "프로필 전체 조회", description = "사용자의 프로필 조회")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "프로필 조회 성공")
     })

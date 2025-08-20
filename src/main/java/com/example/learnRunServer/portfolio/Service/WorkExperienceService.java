@@ -35,7 +35,7 @@ public class WorkExperienceService {
     public Long saveWorkExperience(WorkExperienceDTO workExperienceDTO, Long userId){
         log.debug("Attempting to save work experience for userId={}", userId);
         UserEntity userEntity = userRepository.findById(userId)
-                .orElseThrow(() -> new UserNotFoundException("ID가 " + userId + "인 사용자를 찾을 수 없습니다."));
+                .orElseThrow(() -> new UserNotFoundException("User not found with id: " + userId));
 
         WorkExperienceEntity workExperienceEntity = toEntity(workExperienceDTO);
         workExperienceEntity.setUser(userEntity);
@@ -48,7 +48,7 @@ public class WorkExperienceService {
     public void updateWorkExperience(Long workExperienceId, WorkExperienceDTO workExperienceDTO){
         log.debug("Attempting to update workExperienceId={}", workExperienceId);
         WorkExperienceEntity workExperienceEntity = workExperienceRepository.findByWorkExperienceId(workExperienceId)
-                .orElseThrow(() -> new WorkExperienceNotFoundException("ID가 " + workExperienceId + "인 수정할 경력 정보를 찾을 수 없습니다."));
+                .orElseThrow(() -> new WorkExperienceNotFoundException("WorkExperience not found with id: " + workExperienceId));
 
         workExperienceEntity.setTitle(workExperienceDTO.getTitle());
         workExperienceEntity.setStartDate(workExperienceDTO.getStartDate());
@@ -59,7 +59,7 @@ public class WorkExperienceService {
     public void deleteWorkExperience(Long workExperienceId){
         log.debug("Attempting to delete workExperienceId={}", workExperienceId);
         WorkExperienceEntity workExperienceEntity = workExperienceRepository.findByWorkExperienceId(workExperienceId)
-                .orElseThrow(() -> new WorkExperienceNotFoundException("ID가 " + workExperienceId + "인 삭제할 경력 정보를 찾을 수 없습니다."));
+                .orElseThrow(() -> new WorkExperienceNotFoundException("WorkExperience not found with id: " + workExperienceId));
 
         workExperienceRepository.delete(workExperienceEntity);
         log.info("Work experience deleted: workExperienceId={}", workExperienceId);
@@ -69,7 +69,7 @@ public class WorkExperienceService {
     public List<WorkExperienceDTO> getWorkExperiences(Long userId){
         log.debug("Attempting to get work experiences for userId={}", userId);
         if (!userRepository.existsById(userId)) {
-            throw new UserNotFoundException("ID가 " + userId + "인 사용자를 찾을 수 없습니다.");
+            throw new UserNotFoundException("User not found with id: " + userId);
         }
 
         List<WorkExperienceEntity> workExperienceEntities = workExperienceRepository.findAllByUser_UserId(userId);

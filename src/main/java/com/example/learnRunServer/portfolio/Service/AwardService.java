@@ -33,7 +33,7 @@ public class AwardService {
     public Long saveAward(AwardDTO awardDTO, Long userId){
         log.debug("Attempting to save award for userId={}", userId);
         UserEntity userEntity = userRepository.findById(userId)
-                .orElseThrow(() -> new UserNotFoundException("ID가 " + userId + "인 사용자를 찾을 수 없습니다."));
+                .orElseThrow(() -> new UserNotFoundException("User not found with id: " + userId));
 
         AwardEntity awardEntity = toEntity(awardDTO);
         awardEntity.setUser(userEntity);
@@ -46,7 +46,7 @@ public class AwardService {
     public void updateAward(Long awardId, AwardDTO awardDTO){
         log.debug("Attempting to update awardId={}", awardId);
         AwardEntity awardEntity = awardRepository.findByAwardId(awardId)
-                .orElseThrow(()-> new AwardNotFoundException("ID가 " + awardId + "인 수정할 수상경력을 찾을 수 없습니다."));
+                .orElseThrow(()-> new AwardNotFoundException("Award not found with id: " + awardId));
 
         awardEntity.setDate(awardDTO.getDate());
         awardEntity.setTitle(awardDTO.getTitle());
@@ -56,7 +56,7 @@ public class AwardService {
     public void deleteAward(Long awardId){
         log.debug("Attempting to delete awardId={}", awardId);
         AwardEntity awardEntity = awardRepository.findByAwardId(awardId)
-                .orElseThrow(()-> new AwardNotFoundException("ID가 " + awardId + "인 삭제할 수상경력을 찾을 수 없습니다."));
+                .orElseThrow(()-> new AwardNotFoundException("Award not found with id: " + awardId));
         awardRepository.delete(awardEntity);
         log.info("Award deleted: awardId={}", awardId);
     }
@@ -65,7 +65,7 @@ public class AwardService {
     public List<AwardDTO> getAwards(Long userId){
         log.debug("Attempting to get awards for userId={}", userId);
         if (!userRepository.existsById(userId)) {
-            throw new UserNotFoundException("ID가 " + userId + "인 사용자를 찾을 수 없습니다.");
+            throw new UserNotFoundException("User not found with id: " + userId);
         }
 
         List<AwardEntity> awardEntities = awardRepository.findAllByUser_UserId(userId);

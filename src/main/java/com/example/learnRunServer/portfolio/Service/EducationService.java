@@ -34,7 +34,7 @@ public class EducationService {
     public Long saveEducation(EducationDTO educationDTO, Long userId){
         log.debug("Attempting to save education for userId={}", userId);
         UserEntity userEntity = userRepository.findById(userId)
-                .orElseThrow(() -> new UserNotFoundException("ID가 " + userId + "인 사용자를 찾을 수 없습니다."));
+                .orElseThrow(() -> new UserNotFoundException("User not found with id: " + userId));
 
         EducationEntity educationEntity = toEntity(educationDTO);
         educationEntity.setUser(userEntity);
@@ -47,7 +47,7 @@ public class EducationService {
     public void updateEducation(Long educationId, EducationDTO educationDTO){
         log.debug("Attempting to update educationId={}", educationId);
         EducationEntity educationEntity = educationRepository.findByEducationId(educationId)
-                .orElseThrow(() -> new EducationNotFoundException("ID가 " + educationId + "인 수정할 학력 정보를 찾을 수 없습니다."));
+                .orElseThrow(() -> new EducationNotFoundException("Education not found with id: " + educationId));
 
         educationEntity.setTitle(educationDTO.getTitle());
         educationEntity.setStartDate(educationDTO.getStartDate());
@@ -58,7 +58,7 @@ public class EducationService {
     public void deleteEducation(Long educationId){
         log.debug("Attempting to delete educationId={}", educationId);
         EducationEntity educationEntity = educationRepository.findByEducationId(educationId)
-                .orElseThrow(() -> new EducationNotFoundException("ID가 " + educationId + "인 삭제할 학력 정보를 찾을 수 없습니다."));
+                .orElseThrow(() -> new EducationNotFoundException("Education not found with id: " + educationId));
 
         educationRepository.delete(educationEntity);
         log.info("Education deleted: educationId={}", educationId);
@@ -68,7 +68,7 @@ public class EducationService {
     public List<EducationDTO> getEducations(Long userId){
         log.debug("Attempting to get educations for userId={}", userId);
         if (!userRepository.existsById(userId)) {
-            throw new UserNotFoundException("ID가 " + userId + "인 사용자를 찾을 수 없습니다.");
+            throw new UserNotFoundException("User not found with id: " + userId);
         }
 
         List<EducationEntity> educationEntities = educationRepository.findAllByUser_UserId(userId);

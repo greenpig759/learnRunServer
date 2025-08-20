@@ -33,7 +33,7 @@ public class QualificationsService {
     public Long saveQualifications(QualificationsDTO qualificationsDTO, Long userId){
         log.debug("Attempting to save qualification for userId={}", userId);
         UserEntity userEntity = userRepository.findById(userId)
-                .orElseThrow(() -> new UserNotFoundException("ID가 " + userId + "인 사용자를 찾을 수 없습니다."));
+                .orElseThrow(() -> new UserNotFoundException("User not found with id: " + userId));
 
         QualificationsEntity qualificationsEntity = toEntity(qualificationsDTO);
         qualificationsEntity.setUser(userEntity);
@@ -45,7 +45,7 @@ public class QualificationsService {
     public void updateQualifications(Long qualificationsId, QualificationsDTO qualificationsDTO){
         log.debug("Attempting to update qualificationId={}", qualificationsId);
         QualificationsEntity qualificationsEntity = qualificationsRepository.findByQualificationsId(qualificationsId)
-                .orElseThrow(() -> new QualificationNotFoundException("ID가 " + qualificationsId + "인 수정할 자격증을 찾을 수 없습니다."));
+                .orElseThrow(() -> new QualificationNotFoundException("Qualifications not found with id: " + qualificationsId));
 
         qualificationsEntity.setTitle(qualificationsDTO.getTitle());
         qualificationsEntity.setDate(qualificationsDTO.getDate());
@@ -55,7 +55,7 @@ public class QualificationsService {
     public void deleteQualifications(Long qualificationsId){
         log.debug("Attempting to delete qualificationId={}", qualificationsId);
         QualificationsEntity qualificationsEntity = qualificationsRepository.findByQualificationsId(qualificationsId)
-                .orElseThrow(() -> new QualificationNotFoundException("ID가 " + qualificationsId + "인 삭제할 자격증을 찾을 수 없습니다."));
+                .orElseThrow(() -> new QualificationNotFoundException("Qualifications not found with id: " + qualificationsId));
 
         qualificationsRepository.delete(qualificationsEntity);
         log.info("Qualification deleted: qualificationId={}", qualificationsId);
@@ -65,7 +65,7 @@ public class QualificationsService {
     public List<QualificationsDTO> getQualifications(Long userId){
         log.debug("Attempting to get qualifications for userId={}", userId);
         if (!userRepository.existsById(userId)) {
-            throw new UserNotFoundException("ID가 " + userId + "인 사용자를 찾을 수 없습니다.");
+            throw new UserNotFoundException("User not found with id: " + userId);
         }
 
         List<QualificationsEntity> qualificationsEntities = qualificationsRepository.findAllByUser_UserId(userId);
