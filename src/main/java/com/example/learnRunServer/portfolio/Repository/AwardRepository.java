@@ -9,5 +9,5 @@ import java.util.Optional;
 
 public interface AwardRepository extends JpaRepository<AwardEntity, Long> {
     Optional<AwardEntity> findByAwardId(Long awardId);
-    List<AwardEntity> findByUserUserId(Long userId);
+    List<AwardEntity> findAllByUser_UserId(Long userId);
 }
