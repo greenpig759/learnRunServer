@@ -20,7 +20,8 @@ public class SecurityConfig {
                 .authorizeHttpRequests(
                         authorize -> authorize
                                 .requestMatchers("/learnRun/user/login", "/learnRun/memo/save",
-                                "/learnRun/memo/update", "/learnRun/memo/delete", "/learnRun/memo/all",
+                                "/learnRun/memo/update", "/learnRun/memo/delete", "/learnRun/memo/all"
+                                ,"learnRun/**",
                                         "/swagger-ui/**",
                                         "/v3/api-docs/**",
                                         "/swagger-ui.html",

@@ -39,19 +39,15 @@ public class UserService {
         UserEntity userEntity;
 
 
-        if(optionalUser.isPresent()){
-            // 2-1. 만약 사용자의 정보가 있다면 기존 정보를 사용
-            userEntity = optionalUser.get();
-        }else{
-            // 2-2. 사용자의 정보가 없다면 새로 등록
-            userEntity = userRepository.save(toUserEntity(userDTO));
-        }
+        // 2-1. 만약 사용자의 정보가 있다면 기존 정보를 사용
+        // 2-2. 사용자의 정보가 없다면 새로 등록
+        userEntity = optionalUser.orElseGet(() -> userRepository.save(toUserEntity(userDTO)));
 
         // 토큰 발급
         String accessToken = jwtProvider.createAccessToken(userEntity.getUserId(), "ROLE_USER");
         String refreshToken = jwtProvider.createRefreshToken(userEntity.getUserId());
 
-        // 이때 리프레시 토큰의 경우 DB에 저장
+        // 리프레시 토큰의 경우 DB에 저장
         RefreshTokenEntity refreshTokenEntity = RefreshTokenEntity.builder()
                 .token(refreshToken)
                 .issuedAt(LocalDateTime.now())
@@ -64,4 +60,9 @@ public class UserService {
         // 토큰을 묶어서 리턴
         return new TokenResponse(accessToken, refreshToken);
     }
+
+    // 로그아웃(요청 시 리프레시 토큰을 포함할것)
+
+    // 탈퇴
+
 }
