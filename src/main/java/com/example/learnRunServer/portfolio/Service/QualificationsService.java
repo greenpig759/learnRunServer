@@ -18,44 +18,58 @@ import java.util.stream.Collectors;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-@Transactional
 public class QualificationsService {
     private final QualificationsRepository qualificationsRepository;
     private final UserRepository userRepository;
 
-    public QualificationsEntity toEntity(QualificationsDTO dto){
+    public QualificationsEntity toEntity(QualificationsDTO dto, UserEntity user){
         return QualificationsEntity.builder()
                 .title(dto.getTitle())
                 .date(dto.getDate())
+                .user(user)
                 .build();
     }
 
+    public QualificationsDTO toDTO(QualificationsEntity entity){
+        return QualificationsDTO.builder()
+                .qualificationsId(entity.getQualificationsId())
+                .title(entity.getTitle())
+                .date(entity.getDate())
+                .version(entity.getVersion())
+                .build();
+    }
+
+    @Transactional
     public Long saveQualifications(QualificationsDTO qualificationsDTO, Long userId){
         log.debug("Attempting to save qualification for userId={}", userId);
         UserEntity userEntity = userRepository.findById(userId)
                 .orElseThrow(() -> new UserNotFoundException("User not found with id: " + userId));
 
-        QualificationsEntity qualificationsEntity = toEntity(qualificationsDTO);
-        qualificationsEntity.setUser(userEntity);
-        qualificationsRepository.save(qualificationsEntity);
-        log.info("Qualification saved: qualificationId={}, userId={}", qualificationsEntity.getQualificationsId(), userId);
-        return qualificationsEntity.getQualificationsId();
+        QualificationsEntity qualificationsEntity = toEntity(qualificationsDTO, userEntity);
+        QualificationsEntity saved = qualificationsRepository.save(qualificationsEntity);
+        log.info("Qualification saved: qualificationId={}, userId={}", saved.getQualificationsId(), userId);
+        return saved.getQualificationsId();
     }
 
-    public void updateQualifications(Long qualificationsId, QualificationsDTO qualificationsDTO){
+    private QualificationsEntity findQualificationByIdAndValidateUser(Long qualificationsId, Long userId) {
+        return qualificationsRepository.findByQualificationsIdAndUser_UserId(qualificationsId, userId)
+                .orElseThrow(() -> new QualificationNotFoundException("Qualification not found with id: " + qualificationsId + " for the current user"));
+    }
+
+    @Transactional
+    public void updateQualifications(Long qualificationsId, QualificationsDTO qualificationsDTO, Long userId){
         log.debug("Attempting to update qualificationId={}", qualificationsId);
-        QualificationsEntity qualificationsEntity = qualificationsRepository.findByQualificationsId(qualificationsId)
-                .orElseThrow(() -> new QualificationNotFoundException("Qualifications not found with id: " + qualificationsId));
+        QualificationsEntity qualificationsEntity = findQualificationByIdAndValidateUser(qualificationsId, userId);
 
         qualificationsEntity.setTitle(qualificationsDTO.getTitle());
         qualificationsEntity.setDate(qualificationsDTO.getDate());
         log.info("Qualification updated: qualificationId={}", qualificationsId);
     }
 
-    public void deleteQualifications(Long qualificationsId){
+    @Transactional
+    public void deleteQualifications(Long qualificationsId, Long userId){
         log.debug("Attempting to delete qualificationId={}", qualificationsId);
-        QualificationsEntity qualificationsEntity = qualificationsRepository.findByQualificationsId(qualificationsId)
-                .orElseThrow(() -> new QualificationNotFoundException("Qualifications not found with id: " + qualificationsId));
+        QualificationsEntity qualificationsEntity = findQualificationByIdAndValidateUser(qualificationsId, userId);
 
         qualificationsRepository.delete(qualificationsEntity);
         log.info("Qualification deleted: qualificationId={}", qualificationsId);
@@ -64,19 +78,12 @@ public class QualificationsService {
     @Transactional(readOnly = true)
     public List<QualificationsDTO> getQualifications(Long userId){
         log.debug("Attempting to get qualifications for userId={}", userId);
-        if (!userRepository.existsById(userId)) {
-            throw new UserNotFoundException("User not found with id: " + userId);
-        }
 
         List<QualificationsEntity> qualificationsEntities = qualificationsRepository.findAllByUser_UserId(userId);
         log.debug("Found {} qualifications for userId={}", qualificationsEntities.size(), userId);
 
         return qualificationsEntities.stream()
-                .map(qualificationsEntity -> QualificationsDTO.builder()
-                        .qualificationsId(qualificationsEntity.getQualificationsId())
-                        .date(qualificationsEntity.getDate())
-                        .title(qualificationsEntity.getTitle())
-                        .build())
+                .map(this::toDTO)
                 .collect(Collectors.toList());
     }
 }

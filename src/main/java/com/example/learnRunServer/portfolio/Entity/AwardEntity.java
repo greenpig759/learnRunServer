@@ -9,7 +9,7 @@ import java.time.LocalDate;
 
 @Getter
 @Setter
-@ToString
+@ToString(exclude = "user") // 불필요한 쿼리 추가 차단
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -19,6 +19,10 @@ public class AwardEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY) // pk
     private Long awardId;
+
+    // 낙관적 락: 버전 검증 후 수정/삭제
+    @Version
+    private Long version;
 
     @Column(nullable = false)
     private String title;

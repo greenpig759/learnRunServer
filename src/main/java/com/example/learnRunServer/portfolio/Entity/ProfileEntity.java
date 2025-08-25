@@ -16,6 +16,9 @@ public class ProfileEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long profileId;
 
+    @Version
+    private Long version;
+
     @Column(nullable = false)
     private String name;
 

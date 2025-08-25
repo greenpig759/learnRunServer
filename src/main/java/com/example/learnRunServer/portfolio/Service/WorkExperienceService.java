@@ -19,36 +19,51 @@ import java.util.stream.Collectors;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-@Transactional
 public class WorkExperienceService {
     private final WorkExperienceRepository workExperienceRepository;
     private final UserRepository userRepository;
 
-    public WorkExperienceEntity toEntity(WorkExperienceDTO dto){
+    public WorkExperienceEntity toEntity(WorkExperienceDTO dto, UserEntity user){
         return WorkExperienceEntity.builder()
                 .title(dto.getTitle())
                 .startDate(dto.getStartDate())
                 .endDate(dto.getEndDate())
+                .user(user)
                 .build();
     }
 
+    public WorkExperienceDTO toDTO(WorkExperienceEntity entity){
+        return WorkExperienceDTO.builder()
+                .workExperienceId(entity.getWorkExperienceId())
+                .title(entity.getTitle())
+                .startDate(entity.getStartDate())
+                .endDate(entity.getEndDate())
+                .version(entity.getVersion())
+                .build();
+    }
+
+    @Transactional
     public Long saveWorkExperience(WorkExperienceDTO workExperienceDTO, Long userId){
         log.debug("Attempting to save work experience for userId={}", userId);
         UserEntity userEntity = userRepository.findById(userId)
                 .orElseThrow(() -> new UserNotFoundException("User not found with id: " + userId));
 
-        WorkExperienceEntity workExperienceEntity = toEntity(workExperienceDTO);
-        workExperienceEntity.setUser(userEntity);
-        workExperienceRepository.save(workExperienceEntity);
-        log.info("Work experience saved: workExperienceId={}, userId={}", workExperienceEntity.getWorkExperienceId(), userId);
+        WorkExperienceEntity workExperienceEntity = toEntity(workExperienceDTO, userEntity);
+        WorkExperienceEntity saved = workExperienceRepository.save(workExperienceEntity);
+        log.info("Work experience saved: workExperienceId={}, userId={}", saved.getWorkExperienceId(), userId);
 
-        return workExperienceEntity.getWorkExperienceId();
+        return saved.getWorkExperienceId();
     }
 
-    public void updateWorkExperience(Long workExperienceId, WorkExperienceDTO workExperienceDTO){
+    private WorkExperienceEntity findWorkExperienceByIdAndValidateUser(Long workExperienceId, Long userId) {
+        return workExperienceRepository.findByWorkExperienceIdAndUser_UserId(workExperienceId, userId)
+                .orElseThrow(() -> new WorkExperienceNotFoundException("WorkExperience not found with id: " + workExperienceId + " for the current user"));
+    }
+
+    @Transactional
+    public void updateWorkExperience(Long workExperienceId, WorkExperienceDTO workExperienceDTO, Long userId){
         log.debug("Attempting to update workExperienceId={}", workExperienceId);
-        WorkExperienceEntity workExperienceEntity = workExperienceRepository.findByWorkExperienceId(workExperienceId)
-                .orElseThrow(() -> new WorkExperienceNotFoundException("WorkExperience not found with id: " + workExperienceId));
+        WorkExperienceEntity workExperienceEntity = findWorkExperienceByIdAndValidateUser(workExperienceId, userId);
 
         workExperienceEntity.setTitle(workExperienceDTO.getTitle());
         workExperienceEntity.setStartDate(workExperienceDTO.getStartDate());
@@ -56,10 +71,10 @@ public class WorkExperienceService {
         log.info("Work experience updated: workExperienceId={}", workExperienceId);
     }
 
-    public void deleteWorkExperience(Long workExperienceId){
+    @Transactional
+    public void deleteWorkExperience(Long workExperienceId, Long userId){
         log.debug("Attempting to delete workExperienceId={}", workExperienceId);
-        WorkExperienceEntity workExperienceEntity = workExperienceRepository.findByWorkExperienceId(workExperienceId)
-                .orElseThrow(() -> new WorkExperienceNotFoundException("WorkExperience not found with id: " + workExperienceId));
+        WorkExperienceEntity workExperienceEntity = findWorkExperienceByIdAndValidateUser(workExperienceId, userId);
 
         workExperienceRepository.delete(workExperienceEntity);
         log.info("Work experience deleted: workExperienceId={}", workExperienceId);
@@ -68,20 +83,12 @@ public class WorkExperienceService {
     @Transactional(readOnly = true)
     public List<WorkExperienceDTO> getWorkExperiences(Long userId){
         log.debug("Attempting to get work experiences for userId={}", userId);
-        if (!userRepository.existsById(userId)) {
-            throw new UserNotFoundException("User not found with id: " + userId);
-        }
 
         List<WorkExperienceEntity> workExperienceEntities = workExperienceRepository.findAllByUser_UserId(userId);
         log.debug("Found {} work experiences for userId={}", workExperienceEntities.size(), userId);
 
         return workExperienceEntities.stream()
-                .map(workExperienceEntity -> WorkExperienceDTO.builder()
-                        .workExperienceId(workExperienceEntity.getWorkExperienceId())
-                        .title(workExperienceEntity.getTitle())
-                        .startDate(workExperienceEntity.getStartDate())
-                        .endDate(workExperienceEntity.getEndDate())
-                        .build())
+                .map(this::toDTO)
                 .collect(Collectors.toList());
     }
 }

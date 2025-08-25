@@ -18,6 +18,7 @@ import java.time.LocalDate;
 @StartEndDate
 public class EducationDTO implements DateRange {
     private Long educationId;
+    private Long version;
 
     @NotBlank(message = "교육명을 입력해주세요.")
     private String title;

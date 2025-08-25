@@ -22,4 +22,7 @@ public class AwardDTO {
     @NotNull(message = "날짜를 입력해주세요.")
     @PastOrPresent(message = "날짜는 과거 또는 현재여야 합니다.")
     private LocalDate date;
+
+    // 낙관적 락: 버전 검증 후 수정/삭제
+    private Long version;
 }

@@ -8,6 +8,6 @@ import java.util.List;
 import java.util.Optional;
 
 public interface QualificationsRepository extends JpaRepository<QualificationsEntity, Long> {
-    Optional<QualificationsEntity> findByQualificationsId(Long qualificationsId);
     List<QualificationsEntity> findAllByUser_UserId(Long userId);
+    Optional<QualificationsEntity> findByQualificationsIdAndUser_UserId(Long qualificationsId, Long userId);
 }

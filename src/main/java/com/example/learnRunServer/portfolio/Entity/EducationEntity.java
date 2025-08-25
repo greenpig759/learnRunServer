@@ -19,7 +19,9 @@ public class EducationEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long educationId;
 
-    // 수상경력은 String으로 하고 자격증은 LocalDate로 한 이유?
+    @Version
+    private Long version;
+
     @Column(nullable = false)
     private LocalDate startDate;
 

@@ -18,65 +18,82 @@ import java.util.stream.Collectors;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-@Transactional
 public class AwardService {
     private final AwardRepository awardRepository;
     private final UserRepository userRepository;
 
-    public AwardEntity toEntity(AwardDTO dto){
+    // DTO -> Entity 변환 메서드
+    public AwardEntity toEntity(AwardDTO dto, UserEntity user){
         return AwardEntity.builder()
                 .title(dto.getTitle())
                 .date(dto.getDate())
+                .user(user)
+                .build();
+    }
+    // Entity -> DTO 변환 메서드
+    public AwardDTO toDTO(AwardEntity entity) {
+        return AwardDTO.builder()
+                .awardId(entity.getAwardId())
+                .date(entity.getDate())
+                .title(entity.getTitle())
+                .version(entity.getVersion()) // 버전 추가
                 .build();
     }
 
+    // 등록 서비스 메서드
+    @Transactional
     public Long saveAward(AwardDTO awardDTO, Long userId){
         log.debug("Attempting to save award for userId={}", userId);
         UserEntity userEntity = userRepository.findById(userId)
                 .orElseThrow(() -> new UserNotFoundException("User not found with id: " + userId));
 
-        AwardEntity awardEntity = toEntity(awardDTO);
-        awardEntity.setUser(userEntity);
-        awardRepository.save(awardEntity);
-        log.info("Award saved: awardId={}, userId={}", awardEntity.getAwardId(), userId);
+        AwardEntity awardEntity = toEntity(awardDTO, userEntity); // Entity로 변환
+        AwardEntity saved = awardRepository.save(awardEntity);
+        log.info("Award saved: awardId={}, userId={}", saved.getAwardId(), userId);
 
-        return awardEntity.getAwardId();
+        return saved.getAwardId();
     }
 
-    public void updateAward(Long awardId, AwardDTO awardDTO){
-        log.debug("Attempting to update awardId={}", awardId);
-        AwardEntity awardEntity = awardRepository.findByAwardId(awardId)
-                .orElseThrow(()-> new AwardNotFoundException("Award not found with id: " + awardId));
+    // 수정, 삭제에서 사용하는 중복된 AwardId 검증 로직 메서드 추출 + 사용자 ID 검증 로직 추가
+    private AwardEntity findAwardByIdAndValidateUser(Long awardId, Long userId) {
+        return awardRepository.findByAwardIdAndUser_UserId(awardId, userId)
+                .orElseThrow(() -> new AwardNotFoundException("Award not found with id: " + awardId + " for the current user"));
+    }
 
+    // 수정 서비스 메서드
+    @Transactional
+    public void updateAward(Long awardId, AwardDTO awardDTO, Long userId){
+        log.debug("Attempting to update awardId={}", awardId);
+        AwardEntity awardEntity = findAwardByIdAndValidateUser(awardId, userId); // 사용자의 award인지 검증 및 조회
+
+        // DTO의 값으로 엔티티의 필드를 업데이트.
+        // 트랜잭션이 커밋될 때 JPA가 조회 시점의 버전과 현재 DB의 버전을 자동으로 비교하고,
+        // 버전이 다르면 ObjectOptimisticLockingFailureException을 던짐.
         awardEntity.setDate(awardDTO.getDate());
         awardEntity.setTitle(awardDTO.getTitle());
         log.info("Award updated: awardId={}", awardId);
     }
 
-    public void deleteAward(Long awardId){
+    // 삭제 서비스 메서드
+    @Transactional
+    public void deleteAward(Long awardId, Long userId){
         log.debug("Attempting to delete awardId={}", awardId);
-        AwardEntity awardEntity = awardRepository.findByAwardId(awardId)
-                .orElseThrow(()-> new AwardNotFoundException("Award not found with id: " + awardId));
+        AwardEntity awardEntity = findAwardByIdAndValidateUser(awardId, userId); // 추출 메서드 사용
+        // 삭제에서도 version 확인?
         awardRepository.delete(awardEntity);
         log.info("Award deleted: awardId={}", awardId);
     }
 
+    // 조회 서비스 메서드
     @Transactional(readOnly = true)
     public List<AwardDTO> getAwards(Long userId){
         log.debug("Attempting to get awards for userId={}", userId);
-        if (!userRepository.existsById(userId)) {
-            throw new UserNotFoundException("User not found with id: " + userId);
-        }
 
         List<AwardEntity> awardEntities = awardRepository.findAllByUser_UserId(userId);
         log.debug("Found {} awards for userId={}", awardEntities.size(), userId);
 
         return awardEntities.stream()
-                .map(awardEntity -> AwardDTO.builder()
-                        .awardId(awardEntity.getAwardId())
-                        .date(awardEntity.getDate())
-                        .title(awardEntity.getTitle())
-                        .build())
-                .collect(Collectors.toList());
+                .map(this::toDTO)               // DTO로 변환
+                .collect(Collectors.toList());  // 리스트로 변환
     }
 }

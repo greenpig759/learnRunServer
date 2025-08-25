@@ -10,17 +10,21 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @RestController
-@RequestMapping("/learnRun")
+@RequestMapping("/learnRun/educations")
 @RequiredArgsConstructor
 @Tag(name = "Education API", description = "학력 관련 API 모음")
 public class EducationController {
@@ -30,7 +34,7 @@ public class EducationController {
     @ApiResponses({
             @ApiResponse(responseCode = "201", description = "학력 등록 성공")
     })
-    @PostMapping("/education/save")
+    @PostMapping
     public ResponseEntity<Long> saveEducation(@Valid @RequestBody EducationDTO educationDTO,
                                               @AuthenticationPrincipal CustomUserDetails customUserDetails){
         log.debug("Request to save education: {} for userId={}", educationDTO, customUserDetails.getUserId());
@@ -45,32 +49,52 @@ public class EducationController {
 
     @Operation(summary = "학력 수정", description = "기존 학력 수정")
     @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "학력 수정 성공")
+            @ApiResponse(responseCode = "200", description = "학력 수정 성공"),
+            @ApiResponse(responseCode = "409", description = "데이터 충돌 발생")
     })
-    @PutMapping("/education/update/{educationId}")
-    public ResponseEntity<Void> updateEducation(@PathVariable Long educationId,
-                                                @Valid @RequestBody EducationDTO educationDTO){
+    @PutMapping("/{educationId}")
+    public ResponseEntity<?> updateEducation(@PathVariable Long educationId,
+                                             @Valid @RequestBody EducationDTO educationDTO,
+                                             @AuthenticationPrincipal CustomUserDetails customUserDetails){
         log.debug("Request to update educationId={}: {}", educationId, educationDTO);
-        educationService.updateEducation(educationId, educationDTO);
-        return ResponseEntity.ok().build();
+        try {
+            educationService.updateEducation(educationId, educationDTO, customUserDetails.getUserId());
+            return ResponseEntity.ok().build();
+        } catch (ObjectOptimisticLockingFailureException e) {
+            Map<String, Object> responseBody = new HashMap<>();
+            responseBody.put("status", 409);
+            responseBody.put("error", "Conflict");
+            responseBody.put("message", "데이터가 접근에 의해 변경되었습니다.");
+            return new ResponseEntity<>(responseBody, HttpStatus.CONFLICT);
+        }
     }
 
     @Operation(summary = "학력 삭제", description = "기존 학력 삭제")
     @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "학력 삭제 성공")
+            @ApiResponse(responseCode = "204", description = "학력 삭제 성공"),
+            @ApiResponse(responseCode = "409", description = "데이터 충돌 발생")
     })
-    @DeleteMapping("/education/delete/{educationId}")
-    public ResponseEntity<Void> deleteEducation(@PathVariable Long educationId){
+    @DeleteMapping("/{educationId}")
+    public ResponseEntity<?> deleteEducation(@PathVariable Long educationId,
+                                             @AuthenticationPrincipal CustomUserDetails customUserDetails){
         log.debug("Request to delete educationId={}", educationId);
-        educationService.deleteEducation(educationId);
-        return ResponseEntity.ok().build();
+        try {
+            educationService.deleteEducation(educationId, customUserDetails.getUserId());
+            return ResponseEntity.noContent().build();
+        } catch (ObjectOptimisticLockingFailureException e) {
+            Map<String, Object> responseBody = new HashMap<>();
+            responseBody.put("status", 409);
+            responseBody.put("error", "Conflict");
+            responseBody.put("message", "데이터가 접근에 의해 변경되었습니다.");
+            return new ResponseEntity<>(responseBody, HttpStatus.CONFLICT);
+        }
     }
 
     @Operation(summary = "학력 전체 조회", description = "사용자의 모든 학력 조회")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "학력 조회 성공")
     })
-    @GetMapping("/education/get")
+    @GetMapping
     public ResponseEntity<List<EducationDTO>> getEducations(@AuthenticationPrincipal CustomUserDetails customUserDetails){
         log.debug("Request to get educations for userId={}", customUserDetails.getUserId());
         List<EducationDTO> educationDTOList = educationService.getEducations(customUserDetails.getUserId());

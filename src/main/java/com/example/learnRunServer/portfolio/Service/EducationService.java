@@ -18,36 +18,51 @@ import java.util.stream.Collectors;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-@Transactional
 public class EducationService {
     private final EducationRepository educationRepository;
     private final UserRepository userRepository;
 
-    public EducationEntity toEntity(EducationDTO dto){
+    public EducationEntity toEntity(EducationDTO dto, UserEntity user){
         return EducationEntity.builder()
                 .title(dto.getTitle())
                 .startDate(dto.getStartDate())
                 .endDate(dto.getEndDate())
+                .user(user)
                 .build();
     }
 
+    public EducationDTO toDTO(EducationEntity entity){
+        return EducationDTO.builder()
+                .educationId(entity.getEducationId())
+                .title(entity.getTitle())
+                .startDate(entity.getStartDate())
+                .endDate(entity.getEndDate())
+                .version(entity.getVersion())
+                .build();
+    }
+
+    @Transactional
     public Long saveEducation(EducationDTO educationDTO, Long userId){
         log.debug("Attempting to save education for userId={}", userId);
         UserEntity userEntity = userRepository.findById(userId)
                 .orElseThrow(() -> new UserNotFoundException("User not found with id: " + userId));
 
-        EducationEntity educationEntity = toEntity(educationDTO);
-        educationEntity.setUser(userEntity);
-        educationRepository.save(educationEntity);
-        log.info("Education saved: educationId={}, userId={}", educationEntity.getEducationId(), userId);
+        EducationEntity educationEntity = toEntity(educationDTO, userEntity);
+        EducationEntity saved = educationRepository.save(educationEntity);
+        log.info("Education saved: educationId={}, userId={}", saved.getEducationId(), userId);
 
-        return educationEntity.getEducationId();
+        return saved.getEducationId();
     }
 
-    public void updateEducation(Long educationId, EducationDTO educationDTO){
+    private EducationEntity findEducationByIdAndValidateUser(Long educationId, Long userId) {
+        return educationRepository.findByEducationIdAndUser_UserId(educationId, userId)
+                .orElseThrow(() -> new EducationNotFoundException("Education not found with id: " + educationId + " for the current user"));
+    }
+
+    @Transactional
+    public void updateEducation(Long educationId, EducationDTO educationDTO, Long userId){
         log.debug("Attempting to update educationId={}", educationId);
-        EducationEntity educationEntity = educationRepository.findByEducationId(educationId)
-                .orElseThrow(() -> new EducationNotFoundException("Education not found with id: " + educationId));
+        EducationEntity educationEntity = findEducationByIdAndValidateUser(educationId, userId);
 
         educationEntity.setTitle(educationDTO.getTitle());
         educationEntity.setStartDate(educationDTO.getStartDate());
@@ -55,10 +70,10 @@ public class EducationService {
         log.info("Education updated: educationId={}", educationId);
     }
 
-    public void deleteEducation(Long educationId){
+    @Transactional
+    public void deleteEducation(Long educationId, Long userId){
         log.debug("Attempting to delete educationId={}", educationId);
-        EducationEntity educationEntity = educationRepository.findByEducationId(educationId)
-                .orElseThrow(() -> new EducationNotFoundException("Education not found with id: " + educationId));
+        EducationEntity educationEntity = findEducationByIdAndValidateUser(educationId, userId);
 
         educationRepository.delete(educationEntity);
         log.info("Education deleted: educationId={}", educationId);
@@ -67,20 +82,12 @@ public class EducationService {
     @Transactional(readOnly = true)
     public List<EducationDTO> getEducations(Long userId){
         log.debug("Attempting to get educations for userId={}", userId);
-        if (!userRepository.existsById(userId)) {
-            throw new UserNotFoundException("User not found with id: " + userId);
-        }
 
         List<EducationEntity> educationEntities = educationRepository.findAllByUser_UserId(userId);
         log.debug("Found {} educations for userId={}", educationEntities.size(), userId);
 
         return educationEntities.stream()
-                .map(educationEntity -> EducationDTO.builder()
-                        .educationId(educationEntity.getEducationId())
-                        .title(educationEntity.getTitle())
-                        .startDate(educationEntity.getStartDate())
-                        .endDate(educationEntity.getEndDate())
-                        .build())
+                .map(this::toDTO)
                 .collect(Collectors.toList());
     }
 }
