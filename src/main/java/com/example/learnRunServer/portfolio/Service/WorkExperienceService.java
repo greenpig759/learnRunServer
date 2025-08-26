@@ -38,7 +38,6 @@ public class WorkExperienceService {
                 .title(entity.getTitle())
                 .startDate(entity.getStartDate())
                 .endDate(entity.getEndDate())
-                .version(entity.getVersion())
                 .build();
     }
 

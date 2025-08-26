@@ -32,7 +32,6 @@ public class ProfileService {
                 .profileId(entity.getProfileId())
                 .name(entity.getName())
                 .email(entity.getEmail())
-                .version(entity.getVersion())
                 .build();
     }
 

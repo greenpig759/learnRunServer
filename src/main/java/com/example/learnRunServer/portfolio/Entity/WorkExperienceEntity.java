@@ -20,9 +20,6 @@ public class WorkExperienceEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long workExperienceId;
 
-    @Version
-    private Long version;
-
     @Column(nullable = false)
     private LocalDate startDate;
 

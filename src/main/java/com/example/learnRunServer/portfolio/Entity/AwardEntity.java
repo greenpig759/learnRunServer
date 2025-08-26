@@ -20,10 +20,6 @@ public class AwardEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY) // pk
     private Long awardId;
 
-    // 낙관적 락: 버전 검증 후 수정/삭제
-    @Version
-    private Long version;
-
     @Column(nullable = false)
     private String title;
 

@@ -20,8 +20,6 @@ public class QualificationsEntity {
     @Column(nullable = false)
     private Long qualificationsId;
 
-    @Version
-    private Long version;
 
     @Column(nullable = false)
     private String title;

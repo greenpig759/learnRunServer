@@ -52,47 +52,25 @@ public class AwardController {
     @Operation(summary = "수상경력 수정", description = "기존 수상경력 수정")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "수상경력 수정 성공"),
-            @ApiResponse(responseCode = "409", description = "데이터 충돌 발생")
     })
     @PutMapping("/{awardId}")
-    public ResponseEntity<?> updateAward(@PathVariable Long awardId,
+    public ResponseEntity<Void> updateAward(@PathVariable Long awardId,
                                          @Valid @RequestBody AwardDTO awardDTO,
                                          @AuthenticationPrincipal CustomUserDetails customUserDetails){
         log.debug("Request to update awardId={}: {}", awardId, awardDTO);
-        try {
-            awardService.updateAward(awardId, awardDTO, customUserDetails.getUserId());
-            return ResponseEntity.ok().build(); // 성공 시 200 OK
-        } catch (ObjectOptimisticLockingFailureException e) {
-            // 데이터 충돌 발생 시 409 Conflict 와 함께 지정된 JSON 메시지 반환
-            Map<String, Object> responseBody = new HashMap<>();
-            responseBody.put("status", 409);
-            responseBody.put("error", "Conflict");
-            responseBody.put("message", "데이터가 다른 접근에 의해 변경되었습니다.");
-            return new ResponseEntity<>(responseBody, HttpStatus.CONFLICT);
-        }
+        return ResponseEntity.ok().build();
     }
 
     // 수상경력 삭제 컨트롤러
     @Operation(summary = "수상경력 삭제", description = "기존 수상경력 삭제")
     @ApiResponses({
             @ApiResponse(responseCode = "204", description = "수상경력 삭제 성공"),
-            @ApiResponse(responseCode = "409", description = "데이터 충돌 발생")
     })
     @DeleteMapping("/{awardId}")
-    public ResponseEntity<?> deleteAward(@PathVariable Long awardId,
+    public ResponseEntity<Void> deleteAward(@PathVariable Long awardId,
                                          @AuthenticationPrincipal CustomUserDetails customUserDetails){
         log.debug("Request to delete awardId={}", awardId);
-        try {
-            awardService.deleteAward(awardId, customUserDetails.getUserId());
-            return ResponseEntity.noContent().build(); // 성공 시 204 No Content
-        } catch (ObjectOptimisticLockingFailureException e) {
-            // 데이터 충돌 발생 시 409 Conflict 와 함께 지정된 JSON 메시지 반환
-            Map<String, Object> responseBody = new HashMap<>();
-            responseBody.put("status", 409);
-            responseBody.put("error", "Conflict");
-            responseBody.put("message", "데이터가 접근에 의해 변경되었습니다.");
-            return new ResponseEntity<>(responseBody, HttpStatus.CONFLICT);
-        }
+        return ResponseEntity.ok().build();
     }
 
     // 수상경력 조회 컨트롤러

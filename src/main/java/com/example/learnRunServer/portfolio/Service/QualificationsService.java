@@ -35,7 +35,6 @@ public class QualificationsService {
                 .qualificationsId(entity.getQualificationsId())
                 .title(entity.getTitle())
                 .date(entity.getDate())
-                .version(entity.getVersion())
                 .build();
     }
 

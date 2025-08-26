@@ -36,7 +36,6 @@ public class AwardService {
                 .awardId(entity.getAwardId())
                 .date(entity.getDate())
                 .title(entity.getTitle())
-                .version(entity.getVersion()) // 버전 추가
                 .build();
     }
 

@@ -37,7 +37,6 @@ public class EducationService {
                 .title(entity.getTitle())
                 .startDate(entity.getStartDate())
                 .endDate(entity.getEndDate())
-                .version(entity.getVersion())
                 .build();
     }
 

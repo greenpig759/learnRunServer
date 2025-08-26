@@ -19,9 +19,6 @@ public class EducationEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long educationId;
 
-    @Version
-    private Long version;
-
     @Column(nullable = false)
     private LocalDate startDate;
 

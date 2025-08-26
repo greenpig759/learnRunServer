@@ -10,17 +10,16 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+
+
+
 
 @Slf4j
 @RestController
@@ -49,45 +48,27 @@ public class WorkExperienceController {
 
     @Operation(summary = "경력 수정", description = "기존 경력 수정")
     @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "경력 수정 성공"),
-            @ApiResponse(responseCode = "409", description = "데이터 충돌 발생")
+            @ApiResponse(responseCode = "200", description = "경력 수정 성공")
     })
     @PutMapping("/{workExperienceId}")
-    public ResponseEntity<?> updateWorkExperience(@PathVariable Long workExperienceId,
+    public ResponseEntity<Void> updateWorkExperience(@PathVariable Long workExperienceId,
                                                   @Valid @RequestBody WorkExperienceDTO workExperienceDTO,
                                                   @AuthenticationPrincipal CustomUserDetails customUserDetails){
         log.debug("Request to update workExperienceId={}: {}", workExperienceId, workExperienceDTO);
-        try {
-            workExperienceService.updateWorkExperience(workExperienceId, workExperienceDTO, customUserDetails.getUserId());
-            return ResponseEntity.ok().build();
-        } catch (ObjectOptimisticLockingFailureException e) {
-            Map<String, Object> responseBody = new HashMap<>();
-            responseBody.put("status", 409);
-            responseBody.put("error", "Conflict");
-            responseBody.put("message", "데이터가 접근에 의해 변경되었습니다.");
-            return new ResponseEntity<>(responseBody, HttpStatus.CONFLICT);
-        }
+        workExperienceService.updateWorkExperience(workExperienceId, workExperienceDTO, customUserDetails.getUserId());
+        return ResponseEntity.ok().build();
     }
 
     @Operation(summary = "경력 삭제", description = "기존 경력 삭제")
     @ApiResponses({
-            @ApiResponse(responseCode = "204", description = "경력 삭제 성공"),
-            @ApiResponse(responseCode = "409", description = "데이터 충돌 발생")
+            @ApiResponse(responseCode = "204", description = "경력 삭제 성공")
     })
     @DeleteMapping("/{workExperienceId}")
-    public ResponseEntity<?> deleteWorkExperience(@PathVariable Long workExperienceId,
+    public ResponseEntity<Void> deleteWorkExperience(@PathVariable Long workExperienceId,
                                                   @AuthenticationPrincipal CustomUserDetails customUserDetails){
         log.debug("Request to delete workExperienceId={}", workExperienceId);
-        try {
-            workExperienceService.deleteWorkExperience(workExperienceId, customUserDetails.getUserId());
-            return ResponseEntity.noContent().build();
-        } catch (ObjectOptimisticLockingFailureException e) {
-            Map<String, Object> responseBody = new HashMap<>();
-            responseBody.put("status", 409);
-            responseBody.put("error", "Conflict");
-            responseBody.put("message", "데이터가 접근에 의해 변경되었습니다.");
-            return new ResponseEntity<>(responseBody, HttpStatus.CONFLICT);
-        }
+        workExperienceService.deleteWorkExperience(workExperienceId, customUserDetails.getUserId());
+        return ResponseEntity.noContent().build();
     }
 
     @Operation(summary = "경력 전체 조회", description = "사용자의 모든 경력 조회")
