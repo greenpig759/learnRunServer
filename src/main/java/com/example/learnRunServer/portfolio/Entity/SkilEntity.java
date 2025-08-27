@@ -16,7 +16,7 @@ import lombok.*;
 public class SkilEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long skilId;
+    private Long Id;
 
     @Column(nullable = false)
     private String title;

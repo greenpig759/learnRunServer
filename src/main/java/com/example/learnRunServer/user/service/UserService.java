@@ -1,6 +1,7 @@
 package com.example.learnRunServer.user.service;
 
 
+import com.example.learnRunServer.exception.UserNotFoundException;
 import com.example.learnRunServer.token.Entity.RefreshTokenEntity;
 import com.example.learnRunServer.token.repository.TokenRepository;
 import com.example.learnRunServer.user.DTO.UserDTO;
@@ -45,8 +46,8 @@ public class UserService {
         userEntity = optionalUser.orElseGet(() -> userRepository.save(toUserEntity(userDTO)));
 
         // 토큰 발급
-        String accessToken = jwtProvider.createAccessToken(userEntity.getUserId(), "ROLE_USER");
-        String refreshToken = jwtProvider.createRefreshToken(userEntity.getUserId());
+        String accessToken = jwtProvider.createAccessToken(userEntity.getId(), "ROLE_USER");
+        String refreshToken = jwtProvider.createRefreshToken(userEntity.getId());
 
         // 리프레시 토큰의 경우 DB에 저장
         RefreshTokenEntity refreshTokenEntity = RefreshTokenEntity.builder()
@@ -62,11 +63,23 @@ public class UserService {
         return new TokenResponse(accessToken, refreshToken);
     }
 
-    //@Transactional
+    @Transactional
     // 로그아웃(요청 시 리프레시 토큰을 포함할것)
-//    public Void logout(Long userId, String refreshToken){
-//
-//    }
+    public void logout(String refreshToken){
+        tokenRepository.findByToken(refreshToken)
+                .ifPresent(token -> tokenRepository.delete(token));
+    }
+
+
     // 탈퇴
+    @Transactional
+    public void leaveUser(Long userId){
+        // 1. 유저의 정보를 찾음
+        UserEntity userEntity = userRepository.findById(userId)
+                .orElseThrow(()-> new UserNotFoundException("User not found with id: " + userId));
+
+        // 2. 해당 유저의 상태를 비활성화 시킴
+        userRepository.delete(userEntity);
+    }
 
 }

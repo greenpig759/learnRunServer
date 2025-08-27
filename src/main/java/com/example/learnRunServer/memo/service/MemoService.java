@@ -21,7 +21,7 @@ public class MemoService {
     // DTO -> Entity 변환 메서드
     public MemoEntity toEntity(MemoDTO memoDTO) {
         MemoEntity memoEntity = MemoEntity.builder()
-                .memoId(memoDTO.getMemoId())
+                .Id(memoDTO.getMemoId())
                 .memoTitle(memoDTO.getMemoTitle())
                 .memoContent(memoDTO.getMemoContent())
                 .build();
@@ -69,7 +69,7 @@ public class MemoService {
         // for문을 통해 Entity -> DTO 과정 수행
         for (MemoEntity memoEntity : memoEntities) {
             MemoDTO dto = MemoDTO.builder()
-                    .memoId(memoEntity.getMemoId())
+                    .memoId(memoEntity.getId())
                     .memoTitle(memoEntity.getMemoTitle())
                     .build();
             memoDTOs.add(dto);

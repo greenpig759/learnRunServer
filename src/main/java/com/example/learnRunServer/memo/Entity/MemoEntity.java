@@ -15,7 +15,7 @@ import lombok.*;
 public class MemoEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long memoId;
+    private Long Id;
 
     @Column(nullable = false)
     private String memoTitle;

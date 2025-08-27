@@ -14,8 +14,17 @@ import lombok.*;
 public class UserEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long userId; // pk
+    private Long Id; // pk
 
     @Column(nullable = false) // 카카오톡 로그인을 통해 받는 유저의 고유 id
     private String kakaoId;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private UserState userState; // 탈퇴 등을 한 사람들을 처리
+
+    public enum UserState{
+        ACTIVE,
+        INACTIVE
+    }
 }

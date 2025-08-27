@@ -32,7 +32,7 @@ public class QualificationsService {
 
     public QualificationsDTO toDTO(QualificationsEntity entity){
         return QualificationsDTO.builder()
-                .qualificationsId(entity.getQualificationsId())
+                .qualificationsId(entity.getId())
                 .title(entity.getTitle())
                 .date(entity.getDate())
                 .build();
@@ -46,8 +46,8 @@ public class QualificationsService {
 
         QualificationsEntity qualificationsEntity = toEntity(qualificationsDTO, userEntity);
         QualificationsEntity saved = qualificationsRepository.save(qualificationsEntity);
-        log.info("Qualification saved: qualificationId={}, userId={}", saved.getQualificationsId(), userId);
-        return saved.getQualificationsId();
+        log.info("Qualification saved: qualificationId={}, userId={}", saved.getId(), userId);
+        return saved.getId();
     }
 
     private QualificationsEntity findQualificationByIdAndValidateUser(Long qualificationsId, Long userId) {

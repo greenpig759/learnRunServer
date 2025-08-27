@@ -14,7 +14,7 @@ import lombok.*;
 public class ProfileEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long profileId;
+    private Long Id;
 
     @Column(nullable = false)
     private String name;

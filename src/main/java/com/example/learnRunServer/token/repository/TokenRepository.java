@@ -3,5 +3,10 @@ package com.example.learnRunServer.token.repository;
 import com.example.learnRunServer.token.Entity.RefreshTokenEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface TokenRepository extends JpaRepository<RefreshTokenEntity, Long> {
+import java.util.Optional;
+
+public interface TokenRepository extends JpaRepository<RefreshTokenEntity, String> {
+    Optional<RefreshTokenEntity> findByToken(String token);
+
+    RefreshTokenEntity token(String token);
 }

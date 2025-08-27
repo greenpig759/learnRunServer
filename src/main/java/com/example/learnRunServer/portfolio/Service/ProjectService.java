@@ -41,7 +41,7 @@ public class ProjectService {
         projectEntity.setUser(userEntity);
         projectRepository.save(projectEntity);
 
-        return projectEntity.getProjectId();
+        return projectEntity.getId();
     }
 
     // 프로젝트 글 수정 메서드
@@ -64,7 +64,7 @@ public class ProjectService {
         ProjectEntity projectEntity = projectRepository.findByProjectId(projectId)
                         .orElseThrow(() -> new ProjectNotFoundException("Project not found: " + projectId));
 
-        if(!projectEntity.getUser().getUserId().equals(userID)){
+        if(!projectEntity.getUser().getId().equals(userID)){
             throw new SecurityException("You are not allowed to delete this project");
         }
 
@@ -98,7 +98,7 @@ public class ProjectService {
                 .orElseThrow(() -> new ProjectNotFoundException("Project not found: " + projectId));
         // 2. DTO로 변환하여 리턴하기
         ProjectDTO projectDTO = ProjectDTO.builder()
-                .projectId(projectEntity.getProjectId())
+                .projectId(projectEntity.getId())
                 .startDate(projectEntity.getStartDate())
                 .endDate(projectEntity.getEndDate())
                 .title(projectEntity.getTitle())

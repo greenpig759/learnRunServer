@@ -34,7 +34,7 @@ public class WorkExperienceService {
 
     public WorkExperienceDTO toDTO(WorkExperienceEntity entity){
         return WorkExperienceDTO.builder()
-                .workExperienceId(entity.getWorkExperienceId())
+                .workExperienceId(entity.getId())
                 .title(entity.getTitle())
                 .startDate(entity.getStartDate())
                 .endDate(entity.getEndDate())
@@ -49,9 +49,9 @@ public class WorkExperienceService {
 
         WorkExperienceEntity workExperienceEntity = toEntity(workExperienceDTO, userEntity);
         WorkExperienceEntity saved = workExperienceRepository.save(workExperienceEntity);
-        log.info("Work experience saved: workExperienceId={}, userId={}", saved.getWorkExperienceId(), userId);
+        log.info("Work experience saved: workExperienceId={}, userId={}", saved.getId(), userId);
 
-        return saved.getWorkExperienceId();
+        return saved.getId();
     }
 
     private WorkExperienceEntity findWorkExperienceByIdAndValidateUser(Long workExperienceId, Long userId) {

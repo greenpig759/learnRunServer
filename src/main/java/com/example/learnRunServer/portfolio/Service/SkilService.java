@@ -39,7 +39,7 @@ public class SkilService {
         skilEntity.setUser(user);
         skilRepository.save(skilEntity);
 
-        return skilEntity.getSkilId();
+        return skilEntity.getId();
     }
 
 
@@ -69,7 +69,7 @@ public class SkilService {
         List<SkilDTO> skilDTOList = new ArrayList<>();
         for(SkilEntity skilEntity : skilEntityList) {
             SkilDTO skilDTO = SkilDTO.builder()
-                    .skilId(skilEntity.getSkilId())
+                    .skilId(skilEntity.getId())
                     .title(skilEntity.getTitle())
                     .text(skilEntity.getText())
                     .build();

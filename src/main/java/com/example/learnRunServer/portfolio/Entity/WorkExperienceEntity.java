@@ -18,7 +18,7 @@ import java.time.LocalDate;
 public class WorkExperienceEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long workExperienceId;
+    private Long Id;
 
     @Column(nullable = false)
     private LocalDate startDate;

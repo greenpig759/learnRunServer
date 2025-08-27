@@ -33,7 +33,7 @@ public class AwardService {
     // Entity -> DTO 변환 메서드
     public AwardDTO toDTO(AwardEntity entity) {
         return AwardDTO.builder()
-                .awardId(entity.getAwardId())
+                .awardId(entity.getId())
                 .date(entity.getDate())
                 .title(entity.getTitle())
                 .build();
@@ -48,9 +48,9 @@ public class AwardService {
 
         AwardEntity awardEntity = toEntity(awardDTO, userEntity); // Entity로 변환
         AwardEntity saved = awardRepository.save(awardEntity);
-        log.info("Award saved: awardId={}, userId={}", saved.getAwardId(), userId);
+        log.info("Award saved: awardId={}, userId={}", saved.getId(), userId);
 
-        return saved.getAwardId();
+        return saved.getId();
     }
 
     // 수정, 삭제에서 사용하는 중복된 AwardId 검증 로직 메서드 추출 + 사용자 ID 검증 로직 추가

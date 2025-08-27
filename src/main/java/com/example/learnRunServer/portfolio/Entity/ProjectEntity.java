@@ -16,7 +16,7 @@ import java.time.LocalDate;
 public class ProjectEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long projectId;
+    private Long Id;
 
     @Column(nullable = false)
     private LocalDate startDate;

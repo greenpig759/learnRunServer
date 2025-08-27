@@ -29,7 +29,7 @@ public class ProfileService {
 
     public ProfileDTO toDTO(ProfileEntity entity){
         return ProfileDTO.builder()
-                .profileId(entity.getProfileId())
+                .profileId(entity.getId())
                 .name(entity.getName())
                 .email(entity.getEmail())
                 .build();
@@ -47,8 +47,8 @@ public class ProfileService {
 
         ProfileEntity profileEntity = toEntity(profileDTO, userEntity);
         ProfileEntity saved = profileRepository.save(profileEntity);
-        log.info("Profile saved: profileId={}, userId={}", saved.getProfileId(), userId);
-        return saved.getProfileId();
+        log.info("Profile saved: profileId={}, userId={}", saved.getId(), userId);
+        return saved.getId();
     }
 
     private ProfileEntity findProfileByUserId(Long userId) {

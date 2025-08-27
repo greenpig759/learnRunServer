@@ -33,7 +33,7 @@ public class EducationService {
 
     public EducationDTO toDTO(EducationEntity entity){
         return EducationDTO.builder()
-                .educationId(entity.getEducationId())
+                .educationId(entity.getId())
                 .title(entity.getTitle())
                 .startDate(entity.getStartDate())
                 .endDate(entity.getEndDate())
@@ -48,9 +48,9 @@ public class EducationService {
 
         EducationEntity educationEntity = toEntity(educationDTO, userEntity);
         EducationEntity saved = educationRepository.save(educationEntity);
-        log.info("Education saved: educationId={}, userId={}", saved.getEducationId(), userId);
+        log.info("Education saved: educationId={}, userId={}", saved.getId(), userId);
 
-        return saved.getEducationId();
+        return saved.getId();
     }
 
     private EducationEntity findEducationByIdAndValidateUser(Long educationId, Long userId) {

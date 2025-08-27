@@ -14,7 +14,7 @@ public class CustomUserDetails implements UserDetails {
     private final Collection<? extends GrantedAuthority> authorities; // final로 필수 초기화
 
     public CustomUserDetails(UserEntity userEntity) {
-        this.userId = userEntity.getUserId();
+        this.userId = userEntity.getId();
         this.kakaoId = userEntity.getKakaoId();
         // 기본 ROLE_USER 권한 부여 (필요시 DB로부터 권한을 받아 설정)
         this.authorities = Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER"));

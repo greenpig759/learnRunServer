@@ -18,7 +18,7 @@ public class QualificationsEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(nullable = false)
-    private Long qualificationsId;
+    private Long Id;
 
 
     @Column(nullable = false)

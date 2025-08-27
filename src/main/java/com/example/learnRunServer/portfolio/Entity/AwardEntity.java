@@ -18,7 +18,7 @@ import java.time.LocalDate;
 public class AwardEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY) // pk
-    private Long awardId;
+    private Long Id;
 
     @Column(nullable = false)
     private String title;
