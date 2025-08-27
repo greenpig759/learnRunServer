@@ -9,6 +9,6 @@ import java.util.Optional;
 
 @Repository
 public interface AwardRepository extends JpaRepository<AwardEntity, Long> {
-    List<AwardEntity> findAllByUser_UserId(Long userId);
-    Optional<AwardEntity> findByAwardIdAndUser_UserId(Long awardId, Long userId); // 조회와 검증 동시에
+    List<AwardEntity> findAllByUser_Id(Long userId);
+    Optional<AwardEntity> findByIdAndUser_Id(Long awardId, Long userId); // 조회와 검증 동시에
 }

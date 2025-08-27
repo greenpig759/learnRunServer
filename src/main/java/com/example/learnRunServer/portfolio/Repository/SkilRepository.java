@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface SkilRepository extends JpaRepository<SkilEntity, Long> {
-    Optional<SkilEntity> findBySkilId(Long skilId);
+    Optional<SkilEntity> findById(Long skilId);
 
-    List<SkilEntity> findAllByUser_UserId(Long user);
+    List<SkilEntity> findAllByUser_Id(Long user);
 }

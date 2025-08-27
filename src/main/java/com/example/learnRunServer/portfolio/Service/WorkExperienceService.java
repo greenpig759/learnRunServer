@@ -55,7 +55,7 @@ public class WorkExperienceService {
     }
 
     private WorkExperienceEntity findWorkExperienceByIdAndValidateUser(Long workExperienceId, Long userId) {
-        return workExperienceRepository.findByWorkExperienceIdAndUser_UserId(workExperienceId, userId)
+        return workExperienceRepository.findByIdAndUser_Id(workExperienceId, userId)
                 .orElseThrow(() -> new WorkExperienceNotFoundException("WorkExperience not found with id: " + workExperienceId));
     }
 
@@ -83,7 +83,7 @@ public class WorkExperienceService {
     public List<WorkExperienceDTO> getWorkExperiences(Long userId){
         log.debug("Attempting to get work experiences for userId={}", userId);
 
-        List<WorkExperienceEntity> workExperienceEntities = workExperienceRepository.findAllByUser_UserId(userId);
+        List<WorkExperienceEntity> workExperienceEntities = workExperienceRepository.findAllByUser_Id(userId);
         log.debug("Found {} work experiences for userId={}", workExperienceEntities.size(), userId);
 
         return workExperienceEntities.stream()

@@ -54,7 +54,7 @@ public class EducationService {
     }
 
     private EducationEntity findEducationByIdAndValidateUser(Long educationId, Long userId) {
-        return educationRepository.findByEducationIdAndUser_UserId(educationId, userId)
+        return educationRepository.findByIdAndUser_Id(educationId, userId)
                 .orElseThrow(() -> new EducationNotFoundException("Education not found with id: " + educationId));
     }
 
@@ -82,7 +82,7 @@ public class EducationService {
     public List<EducationDTO> getEducations(Long userId){
         log.debug("Attempting to get educations for userId={}", userId);
 
-        List<EducationEntity> educationEntities = educationRepository.findAllByUser_UserId(userId);
+        List<EducationEntity> educationEntities = educationRepository.findAllByUser_Id(userId);
         log.debug("Found {} educations for userId={}", educationEntities.size(), userId);
 
         return educationEntities.stream()

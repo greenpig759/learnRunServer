@@ -18,6 +18,9 @@ import java.time.LocalDateTime;
 public class RefreshTokenEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long refreshTokenId;
+
+    @Column(nullable = false, unique = true)
     private String token; // 리프레시 토큰 문자열
 
     @Column(nullable = false)

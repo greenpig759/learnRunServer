@@ -9,6 +9,6 @@ import java.util.List;
 import java.util.Optional;
 
 public interface WorkExperienceRepository extends JpaRepository<WorkExperienceEntity, Long> {
-    List<WorkExperienceEntity> findAllByUser_UserId(Long userId);
-    Optional<WorkExperienceEntity> findByWorkExperienceIdAndUser_UserId(Long workExperienceId, Long userId);
+    List<WorkExperienceEntity> findAllByUser_Id(Long userId);
+    Optional<WorkExperienceEntity> findByIdAndUser_Id(Long workExperienceId, Long userId);
 }

@@ -55,7 +55,7 @@ public class AwardService {
 
     // 수정, 삭제에서 사용하는 중복된 AwardId 검증 로직 메서드 추출 + 사용자 ID 검증 로직 추가
     private AwardEntity findAwardByIdAndValidateUser(Long awardId, Long userId) {
-        return awardRepository.findByAwardIdAndUser_UserId(awardId, userId)
+        return awardRepository.findByIdAndUser_Id(awardId, userId)
                 .orElseThrow(() -> new AwardNotFoundException("Award not found with id: " + awardId));
     }
 
@@ -85,7 +85,7 @@ public class AwardService {
     public List<AwardDTO> getAwards(Long userId){
         log.debug("Attempting to get awards for userId={}", userId);
 
-        List<AwardEntity> awardEntities = awardRepository.findAllByUser_UserId(userId);
+        List<AwardEntity> awardEntities = awardRepository.findAllByUser_Id(userId);
         log.debug("Found {} awards for userId={}", awardEntities.size(), userId);
 
         return awardEntities.stream()

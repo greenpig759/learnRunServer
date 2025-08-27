@@ -64,7 +64,7 @@ public class SkilService {
     // 스킬 전부 가져오기 메서드
     @Transactional(readOnly = true)
     public List<SkilDTO> findAllSkils(Long userId) {
-        List<SkilEntity> skilEntityList = skilRepository.findAllByUser_UserId(userId);
+        List<SkilEntity> skilEntityList = skilRepository.findAllByUser_Id(userId);
 
         List<SkilDTO> skilDTOList = new ArrayList<>();
         for(SkilEntity skilEntity : skilEntityList) {

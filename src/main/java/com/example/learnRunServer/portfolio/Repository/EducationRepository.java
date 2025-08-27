@@ -8,6 +8,6 @@ import java.util.List;
 import java.util.Optional;
 
 public interface EducationRepository extends JpaRepository<EducationEntity, Long> {
-    List<EducationEntity> findAllByUser_UserId(Long userId);
-    Optional<EducationEntity> findByEducationIdAndUser_UserId(Long educationId, Long userId);
+    List<EducationEntity> findAllByUser_Id(Long userId);
+    Optional<EducationEntity> findByIdAndUser_Id(Long educationId, Long userId);
 }

@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface MemoRepository extends JpaRepository<MemoEntity, Long> {
-    Optional<MemoEntity> findByMemoId(Long memoId);
+    Optional<MemoEntity> findById(Long memoId);
 
     List<MemoEntity> findAllByUser(UserEntity user);
 }

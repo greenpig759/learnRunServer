@@ -40,7 +40,7 @@ public class MemoService {
 
     // 글 수정 저장 메서드
     public void updateMemo(MemoDTO memoDTO){
-        MemoEntity memoEntity = memoRepository.findByMemoId(memoDTO.getMemoId())
+        MemoEntity memoEntity = memoRepository.findById(memoDTO.getMemoId())
                 .orElseThrow(() -> new IllegalArgumentException("해당 메모가 존재하지 않습니다"));
 
 
@@ -52,14 +52,14 @@ public class MemoService {
 
     // 글 삭제 메서드
     public void deleteMemo(MemoDTO memoDTO){
-        MemoEntity memoEntity = memoRepository.findByMemoId(memoDTO.getMemoId())
+        MemoEntity memoEntity = memoRepository.findById(memoDTO.getMemoId())
                         .orElseThrow(() -> new IllegalArgumentException("해당 메모가 존재하지 않습니다"));
         memoRepository.delete(memoEntity);
     }
 
     // 내가 작성한 글 전부 불러오기
     public List<MemoDTO> getAllMemos(Long userId){
-        UserEntity userEntity = userRepository.findByUserId(userId)
+        UserEntity userEntity = userRepository.findById(userId)
                 .orElseThrow(()-> new IllegalArgumentException("해당하는 유저가 없습니다"));
 
         // 유저를 찾은 뒤 해당 유저를 외래키로 가지는 모든 메모를 가져온다 -> Entity를 DTO로 변환하여 기본키와 제목만 가져옴

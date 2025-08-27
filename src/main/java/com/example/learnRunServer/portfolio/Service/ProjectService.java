@@ -48,7 +48,7 @@ public class ProjectService {
     @Transactional
     public void updateProject(ProjectDTO projectDTO, Long projectId){
         // 1. 기존에 있던 Entity 불러오기
-        ProjectEntity projectEntity = projectRepository.findByProjectId(projectId)
+        ProjectEntity projectEntity = projectRepository.findById(projectId)
                 .orElseThrow(() -> new ProjectNotFoundException("Project not found: " + projectId));
 
         // 2. 기존의 내용에 새로운 내용 붙여넣고 다시 저장하기
@@ -61,7 +61,7 @@ public class ProjectService {
     // 프로젝트 글 삭제 메서드
     @Transactional
     public void deleteProject(Long projectId, Long userID){
-        ProjectEntity projectEntity = projectRepository.findByProjectId(projectId)
+        ProjectEntity projectEntity = projectRepository.findById(projectId)
                         .orElseThrow(() -> new ProjectNotFoundException("Project not found: " + projectId));
 
         if(!projectEntity.getUser().getId().equals(userID)){
@@ -75,7 +75,7 @@ public class ProjectService {
     @Transactional(readOnly = true)
     public List<ProjectDTO> getAllProjects(Long userId){
         // 1. 해당 유저의 모든 글정보(제목, 시작날짜, 끝날짜)
-        List<ProjectEntity> projectEntityList = projectRepository.findAllByUser_UserId(userId);
+        List<ProjectEntity> projectEntityList = projectRepository.findAllByUser_Id(userId);
 
         // 3. 해당 Entity에서 제목, 시작날짜, 끝날짜만 DTO로 변환 후 봔환한다
         List<ProjectDTO> projectDTOList = new ArrayList<>();
@@ -94,7 +94,7 @@ public class ProjectService {
     // 프로젝트 글 상세보기 메서드
     public ProjectDTO getProjectDetail(Long projectId){
         // 1. 해당 프로젝트의 Entity 가져오기
-        ProjectEntity projectEntity = projectRepository.findByProjectId(projectId)
+        ProjectEntity projectEntity = projectRepository.findById(projectId)
                 .orElseThrow(() -> new ProjectNotFoundException("Project not found: " + projectId));
         // 2. DTO로 변환하여 리턴하기
         ProjectDTO projectDTO = ProjectDTO.builder()

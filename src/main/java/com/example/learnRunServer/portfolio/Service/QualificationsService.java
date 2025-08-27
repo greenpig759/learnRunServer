@@ -51,7 +51,7 @@ public class QualificationsService {
     }
 
     private QualificationsEntity findQualificationByIdAndValidateUser(Long qualificationsId, Long userId) {
-        return qualificationsRepository.findByQualificationsIdAndUser_UserId(qualificationsId, userId)
+        return qualificationsRepository.findByIdAndUser_Id(qualificationsId, userId)
                 .orElseThrow(() -> new QualificationsNotFoundException("Qualification not found with id: " + qualificationsId));
     }
 
@@ -78,7 +78,7 @@ public class QualificationsService {
     public List<QualificationsDTO> getQualifications(Long userId){
         log.debug("Attempting to get qualifications for userId={}", userId);
 
-        List<QualificationsEntity> qualificationsEntities = qualificationsRepository.findAllByUser_UserId(userId);
+        List<QualificationsEntity> qualificationsEntities = qualificationsRepository.findAllByUser_Id(userId);
         log.debug("Found {} qualifications for userId={}", qualificationsEntities.size(), userId);
 
         return qualificationsEntities.stream()

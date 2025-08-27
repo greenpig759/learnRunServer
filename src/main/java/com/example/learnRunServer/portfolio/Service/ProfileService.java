@@ -41,7 +41,7 @@ public class ProfileService {
         UserEntity userEntity = userRepository.findById(userId)
                 .orElseThrow(() -> new UserNotFoundException("User not found with id: " + userId));
 
-        profileRepository.findByUser_UserId(userId).ifPresent(p -> {
+        profileRepository.findByUser_Id(userId).ifPresent(p -> {
             throw new IllegalStateException("Profile already exists for this user.");
         });
 
@@ -52,7 +52,7 @@ public class ProfileService {
     }
 
     private ProfileEntity findProfileByUserId(Long userId) {
-        return profileRepository.findByUser_UserId(userId)
+        return profileRepository.findByUser_Id(userId)
                 .orElseThrow(() -> new ProfileNotFoundException("Profile not found for user id: " + userId));
     }
 
