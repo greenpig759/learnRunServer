@@ -1,5 +1,6 @@
 package com.example.learnRunServer.token.Service;
 
+import com.example.learnRunServer.exception.UserNotFoundException;
 import com.example.learnRunServer.token.CustomUserDetails;
 import com.example.learnRunServer.user.Entity.UserEntity;
 
@@ -22,7 +23,7 @@ public class CustomUserDetailsService implements UserDetailsService {
     public CustomUserDetails loadUserByUsername(String userId) throws UsernameNotFoundException {
         // DB에서 userId를 활용하여 해당 사용자를 조회 -> CustomUser로 변환하여 리턴
         UserEntity userEntity = userRepository.findByUserId(Long.parseLong(userId))
-                .orElseThrow(() -> new UsernameNotFoundException("User not found with kakaoId: " + userId));
+                .orElseThrow(() -> new UserNotFoundException("User not found with kakaoId: " + userId));
         return new CustomUserDetails(userEntity);
     }
 }
