@@ -12,6 +12,7 @@ import com.example.learnRunServer.token.TokenResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -61,8 +62,11 @@ public class UserService {
         return new TokenResponse(accessToken, refreshToken);
     }
 
+    //@Transactional
     // 로그아웃(요청 시 리프레시 토큰을 포함할것)
-
+//    public Void logout(Long userId, String refreshToken){
+//
+//    }
     // 탈퇴
 
 }

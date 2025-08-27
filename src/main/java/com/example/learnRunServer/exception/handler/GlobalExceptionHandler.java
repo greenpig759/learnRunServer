@@ -1,12 +1,7 @@
 package com.example.learnRunServer.exception.handler;
 
-import com.example.learnRunServer.exception.AwardNotFoundException;
+import com.example.learnRunServer.exception.*;
 import com.example.learnRunServer.exception.DTO.ErrorResponseDTO;
-import com.example.learnRunServer.exception.EducationNotFoundException;
-import com.example.learnRunServer.exception.ProfileNotFoundException;
-import com.example.learnRunServer.exception.QualificationsNotFoundException;
-import com.example.learnRunServer.exception.UserNotFoundException;
-import com.example.learnRunServer.exception.WorkExperienceNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -66,6 +61,24 @@ public class GlobalExceptionHandler {
     // WorkExperienceNotFoundException 예외 처리 핸들러
     @ExceptionHandler(WorkExperienceNotFoundException.class)
     public ResponseEntity<ErrorResponseDTO> handleWorkExperienceNotFound(WorkExperienceNotFoundException ex) {
+        ErrorResponseDTO error = new ErrorResponseDTO(
+                HttpStatus.NOT_FOUND.value(),
+                ex.getMessage()
+        );
+        return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(SkilNotFoundException.class)
+    public ResponseEntity<ErrorResponseDTO> handleSkilNotFound(SkilNotFoundException ex) {
+        ErrorResponseDTO error = new ErrorResponseDTO(
+                HttpStatus.NOT_FOUND.value(),
+                ex.getMessage()
+        );
+        return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(ProjectNotFoundException.class)
+    public ResponseEntity<ErrorResponseDTO> handleProjectNotFound(ProjectNotFoundException ex) {
         ErrorResponseDTO error = new ErrorResponseDTO(
                 HttpStatus.NOT_FOUND.value(),
                 ex.getMessage()
