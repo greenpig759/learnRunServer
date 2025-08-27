@@ -56,7 +56,7 @@ public class AwardService {
     // 수정, 삭제에서 사용하는 중복된 AwardId 검증 로직 메서드 추출 + 사용자 ID 검증 로직 추가
     private AwardEntity findAwardByIdAndValidateUser(Long awardId, Long userId) {
         return awardRepository.findByAwardIdAndUser_UserId(awardId, userId)
-                .orElseThrow(() -> new AwardNotFoundException("Award not found with id: " + awardId + " for the current user"));
+                .orElseThrow(() -> new AwardNotFoundException("Award not found with id: " + awardId));
     }
 
     // 수정 서비스 메서드
@@ -65,9 +65,6 @@ public class AwardService {
         log.debug("Attempting to update awardId={}", awardId);
         AwardEntity awardEntity = findAwardByIdAndValidateUser(awardId, userId); // 사용자의 award인지 검증 및 조회
 
-        // DTO의 값으로 엔티티의 필드를 업데이트.
-        // 트랜잭션이 커밋될 때 JPA가 조회 시점의 버전과 현재 DB의 버전을 자동으로 비교하고,
-        // 버전이 다르면 ObjectOptimisticLockingFailureException을 던짐.
         awardEntity.setDate(awardDTO.getDate());
         awardEntity.setTitle(awardDTO.getTitle());
         log.info("Award updated: awardId={}", awardId);

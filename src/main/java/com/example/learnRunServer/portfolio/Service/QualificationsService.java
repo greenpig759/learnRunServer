@@ -1,6 +1,6 @@
 package com.example.learnRunServer.portfolio.Service;
 
-import com.example.learnRunServer.exception.QualificationNotFoundException;
+import com.example.learnRunServer.exception.QualificationsNotFoundException;
 import com.example.learnRunServer.exception.UserNotFoundException;
 import com.example.learnRunServer.portfolio.DTO.QualificationsDTO;
 import com.example.learnRunServer.portfolio.Entity.QualificationsEntity;
@@ -52,7 +52,7 @@ public class QualificationsService {
 
     private QualificationsEntity findQualificationByIdAndValidateUser(Long qualificationsId, Long userId) {
         return qualificationsRepository.findByQualificationsIdAndUser_UserId(qualificationsId, userId)
-                .orElseThrow(() -> new QualificationNotFoundException("Qualification not found with id: " + qualificationsId + " for the current user"));
+                .orElseThrow(() -> new QualificationsNotFoundException("Qualification not found with id: " + qualificationsId));
     }
 
     @Transactional

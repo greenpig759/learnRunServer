@@ -56,7 +56,7 @@ public class WorkExperienceService {
 
     private WorkExperienceEntity findWorkExperienceByIdAndValidateUser(Long workExperienceId, Long userId) {
         return workExperienceRepository.findByWorkExperienceIdAndUser_UserId(workExperienceId, userId)
-                .orElseThrow(() -> new WorkExperienceNotFoundException("WorkExperience not found with id: " + workExperienceId + " for the current user"));
+                .orElseThrow(() -> new WorkExperienceNotFoundException("WorkExperience not found with id: " + workExperienceId));
     }
 
     @Transactional

@@ -58,6 +58,7 @@ public class AwardController {
                                          @Valid @RequestBody AwardDTO awardDTO,
                                          @AuthenticationPrincipal CustomUserDetails customUserDetails){
         log.debug("Request to update awardId={}: {}", awardId, awardDTO);
+        awardService.updateAward(awardId, awardDTO, customUserDetails.getUserId());
         return ResponseEntity.ok().build();
     }
 
@@ -70,7 +71,8 @@ public class AwardController {
     public ResponseEntity<Void> deleteAward(@PathVariable Long awardId,
                                          @AuthenticationPrincipal CustomUserDetails customUserDetails){
         log.debug("Request to delete awardId={}", awardId);
-        return ResponseEntity.ok().build();
+        awardService.deleteAward(awardId, customUserDetails.getUserId());
+        return ResponseEntity.noContent().build();
     }
 
     // 수상경력 조회 컨트롤러

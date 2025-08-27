@@ -55,7 +55,7 @@ public class EducationService {
 
     private EducationEntity findEducationByIdAndValidateUser(Long educationId, Long userId) {
         return educationRepository.findByEducationIdAndUser_UserId(educationId, userId)
-                .orElseThrow(() -> new EducationNotFoundException("Education not found with id: " + educationId + " for the current user"));
+                .orElseThrow(() -> new EducationNotFoundException("Education not found with id: " + educationId));
     }
 
     @Transactional

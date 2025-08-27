@@ -1,14 +1,14 @@
 package com.example.learnRunServer.exception;
 
-public class AwardNotFoundException extends RuntimeException {
+public class QualificationsNotFoundException extends RuntimeException {
     private String errorCode;
 
-    public AwardNotFoundException(String errorCode, String message) {
+    public QualificationsNotFoundException(String errorCode, String message) {
         super(message);
         this.errorCode = errorCode;
     }
 
-    public AwardNotFoundException(String message) {
+    public QualificationsNotFoundException(String message) {
         super(message);
     }
 
