@@ -20,7 +20,7 @@ public class UserEntity {
     private String kakaoId;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
+    @Column(nullable = true)
     private UserState userState; // 탈퇴 등을 한 사람들을 처리
 
     public enum UserState{
