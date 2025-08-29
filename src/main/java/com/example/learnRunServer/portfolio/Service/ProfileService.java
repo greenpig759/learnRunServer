@@ -29,7 +29,7 @@ public class ProfileService {
 
     public ProfileDTO toDTO(ProfileEntity entity){
         return ProfileDTO.builder()
-                .profileId(entity.getId())
+                .Id(entity.getId())
                 .name(entity.getName())
                 .email(entity.getEmail())
                 .build();

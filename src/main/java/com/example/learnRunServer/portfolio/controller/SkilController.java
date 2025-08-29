@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.transaction.Transactional;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -35,7 +36,7 @@ public class SkilController {
     @ApiResponses({
             @ApiResponse(responseCode = "201", description = "스킬 등록 성공")
     })
-    public ResponseEntity<Long> saveSkil(@RequestBody SkilDTO skilDTO, @AuthenticationPrincipal CustomUserDetails customUserDetails) {
+    public ResponseEntity<Long> saveSkil(@Valid @RequestBody SkilDTO skilDTO, @AuthenticationPrincipal CustomUserDetails customUserDetails) {
         Long skilId = skilService.saveSkil(skilDTO, customUserDetails.getUserId());
         URI location = ServletUriComponentsBuilder.fromCurrentRequest()
                 .path("/{id}")
@@ -50,7 +51,7 @@ public class SkilController {
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "수정 성공")
     })
-    public ResponseEntity<Void> updateSkil(@PathVariable Long skilId, @RequestBody SkilDTO skilDTO) {
+    public ResponseEntity<Void> updateSkil(@PathVariable Long skilId, @Valid @RequestBody SkilDTO skilDTO) {
         skilService.updateSkil(skilId, skilDTO);
         return ResponseEntity.ok().build();
     }

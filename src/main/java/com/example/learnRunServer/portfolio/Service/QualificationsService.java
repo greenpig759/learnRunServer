@@ -32,7 +32,7 @@ public class QualificationsService {
 
     public QualificationsDTO toDTO(QualificationsEntity entity){
         return QualificationsDTO.builder()
-                .qualificationsId(entity.getId())
+                .Id(entity.getId())
                 .title(entity.getTitle())
                 .date(entity.getDate())
                 .build();

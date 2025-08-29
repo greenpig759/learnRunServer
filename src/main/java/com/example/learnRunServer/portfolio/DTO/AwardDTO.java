@@ -14,7 +14,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @Builder
 public class AwardDTO {
-    private Long awardId; // pk
+    private Long Id; // pk
 
     @NotBlank(message = "제목을 입력해주세요.") // DTO 유효성 검증. 실패 시 메시지
     private String title;

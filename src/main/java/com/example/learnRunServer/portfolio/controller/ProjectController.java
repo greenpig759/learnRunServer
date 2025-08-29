@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -29,7 +30,7 @@ public class ProjectController {
     @ApiResponses({
             @ApiResponse(responseCode = "201", description = "프로젝트 등록 성공")
     })
-    public ResponseEntity<Long> saveProject(@RequestBody ProjectDTO projectDTO, @AuthenticationPrincipal CustomUserDetails customUserDetails) {
+    public ResponseEntity<Long> saveProject(@Valid @RequestBody ProjectDTO projectDTO, @AuthenticationPrincipal CustomUserDetails customUserDetails) {
         Long projectId = projectService.saveProject(projectDTO, customUserDetails.getUserId());
         URI location = ServletUriComponentsBuilder.fromCurrentRequest()
                 .path("/{id}")
@@ -44,7 +45,7 @@ public class ProjectController {
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "수정 성공")
     })
-    public ResponseEntity<Void> updateProject(@RequestBody ProjectDTO projectDTO, @PathVariable Long projectId) {
+    public ResponseEntity<Void> updateProject(@Valid @RequestBody ProjectDTO projectDTO, @PathVariable Long projectId) {
         projectService.updateProject(projectDTO, projectId);
         return ResponseEntity.ok().build();
     }

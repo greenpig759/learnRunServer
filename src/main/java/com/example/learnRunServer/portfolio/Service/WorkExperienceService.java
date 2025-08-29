@@ -34,7 +34,7 @@ public class WorkExperienceService {
 
     public WorkExperienceDTO toDTO(WorkExperienceEntity entity){
         return WorkExperienceDTO.builder()
-                .workExperienceId(entity.getId())
+                .Id(entity.getId())
                 .title(entity.getTitle())
                 .startDate(entity.getStartDate())
                 .endDate(entity.getEndDate())
