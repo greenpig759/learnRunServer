@@ -10,7 +10,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @Builder
 public class ProjectDTO {
-    private Long projectId;
+    private Long Id;
     private LocalDate startDate;
     private LocalDate endDate;
     private String title;

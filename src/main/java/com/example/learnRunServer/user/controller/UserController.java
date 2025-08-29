@@ -22,8 +22,15 @@ public class UserController {
 
     // 로그인 컨트롤러
     @PostMapping("/user/login")
-    public ResponseEntity<TokenResponse> login(@RequestBody UserDTO userDTO){
+    public ResponseEntity<TokenResponse> login(@RequestBody UserDTO userDTO) {
         TokenResponse tokenResponse = userService.login(userDTO);
         return ResponseEntity.ok(tokenResponse);
+    }
+
+    // 로그아웃 컨트롤러
+    @PostMapping("/user/logout")
+    public ResponseEntity<Void> logout(@RequestBody TokenResponse tokenResponse) {
+        userService.logout(tokenResponse.getRefreshToken());
+        return ResponseEntity.ok().build();
     }
 }

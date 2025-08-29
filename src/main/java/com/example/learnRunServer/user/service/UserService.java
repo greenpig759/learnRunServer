@@ -78,7 +78,7 @@ public class UserService {
         UserEntity userEntity = userRepository.findById(userId)
                 .orElseThrow(()-> new UserNotFoundException("User not found with id: " + userId));
 
-        // 2. 해당 유저의 상태를 비활성화 시킴
+        // 2. 해당 유저의 정보를 사용하는 테이블들의 정보를 지우고 유저의 정보도 지움
         userRepository.delete(userEntity);
     }
 

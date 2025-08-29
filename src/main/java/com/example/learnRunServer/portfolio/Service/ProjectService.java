@@ -8,12 +8,14 @@ import com.example.learnRunServer.portfolio.Repository.ProjectRepository;
 import com.example.learnRunServer.user.Entity.UserEntity;
 import com.example.learnRunServer.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class ProjectService {
@@ -81,11 +83,14 @@ public class ProjectService {
         List<ProjectDTO> projectDTOList = new ArrayList<>();
         for(ProjectEntity projectEntity : projectEntityList){
             ProjectDTO projectDTO = ProjectDTO.builder()
+                    .Id(projectEntity.getId())
                     .title(projectEntity.getTitle())
                     .startDate(projectEntity.getStartDate())
                     .endDate(projectEntity.getEndDate())
+                    .text(projectEntity.getText())
                     .build();
             projectDTOList.add(projectDTO);
+            log.info("length: {}", projectDTO.getText().length());
         }
 
         return projectDTOList;
@@ -98,7 +103,7 @@ public class ProjectService {
                 .orElseThrow(() -> new ProjectNotFoundException("Project not found: " + projectId));
         // 2. DTO로 변환하여 리턴하기
         ProjectDTO projectDTO = ProjectDTO.builder()
-                .projectId(projectEntity.getId())
+                .Id(projectEntity.getId())
                 .startDate(projectEntity.getStartDate())
                 .endDate(projectEntity.getEndDate())
                 .title(projectEntity.getTitle())

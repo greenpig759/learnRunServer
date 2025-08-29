@@ -20,7 +20,7 @@ public class MemoEntity {
     @Column(nullable = false)
     private String memoTitle;
 
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "LONGTEXT")
     private String memoContent;
 
     @ManyToOne(fetch = FetchType.LAZY)

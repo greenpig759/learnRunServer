@@ -27,7 +27,8 @@ public class ProjectEntity {
     @Column(nullable = false)
     private String title;
 
-    @Column(nullable = false)
+    //@Lob 혹은 Column에 columnDefinition을 설정
+    @Column(columnDefinition = "LONGTEXT",  nullable = false)
     private String text;
 
     @ManyToOne(fetch = FetchType.LAZY)
