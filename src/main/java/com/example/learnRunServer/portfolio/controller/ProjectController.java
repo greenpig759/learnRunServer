@@ -39,7 +39,7 @@ public class ProjectController {
     }
 
     // 프로젝트 글 수정 컨트롤러
-    @PatchMapping("/project/{projectId}")
+    @PutMapping("/project/{projectId}")
     @Operation(summary = "프로젝트 수정", description = "기존의 프로젝트를 수정")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "수정 성공")
