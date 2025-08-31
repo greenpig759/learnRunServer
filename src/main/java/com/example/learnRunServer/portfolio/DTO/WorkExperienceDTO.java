@@ -17,7 +17,7 @@ import java.time.LocalDate;
 @Builder
 @StartEndDate
 public class WorkExperienceDTO implements DateRange {
-    private Long workExperienceId;
+    private Long Id;
 
     @NotBlank(message = "경력명을 입력해주세요.")
     private String title;

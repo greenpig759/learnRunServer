@@ -33,7 +33,7 @@ public class AwardService {
     // Entity -> DTO 변환 메서드
     public AwardDTO toDTO(AwardEntity entity) {
         return AwardDTO.builder()
-                .awardId(entity.getId())
+                .Id(entity.getId())
                 .date(entity.getDate())
                 .title(entity.getTitle())
                 .build();

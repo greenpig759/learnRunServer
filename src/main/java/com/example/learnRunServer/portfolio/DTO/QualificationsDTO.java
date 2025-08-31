@@ -14,7 +14,7 @@ import java.time.LocalDate;
 @ToString
 @Builder
 public class QualificationsDTO {
-    private Long qualificationsId;
+    private Long Id;
 
     @NotBlank(message = "자격증 이름을 입력해주세요.")
     private String title;

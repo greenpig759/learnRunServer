@@ -33,7 +33,7 @@ public class EducationService {
 
     public EducationDTO toDTO(EducationEntity entity){
         return EducationDTO.builder()
-                .educationId(entity.getId())
+                .Id(entity.getId())
                 .title(entity.getTitle())
                 .startDate(entity.getStartDate())
                 .endDate(entity.getEndDate())
